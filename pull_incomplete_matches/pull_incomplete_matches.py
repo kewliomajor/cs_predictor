@@ -1,7 +1,7 @@
 import requests
 import match_processor
 from bs4 import BeautifulSoup
-import pymongo
+from model import mongo_client
 import json
 from json import JSONEncoder
 
@@ -15,9 +15,8 @@ def to_dict(obj):
     return json.loads(json.dumps(obj, default=lambda o: o.__dict__))
 
 
-client = pymongo.MongoClient("mongodb://localhost:27017/")
-cs_matches_db = client["cs_matches"]
-matches_doc = cs_matches_db["matches"]
+client = mongo_client.MongoClient()
+matches_doc = client.get_matches_document()
 
 base_url = "https://www.hltv.org"
 

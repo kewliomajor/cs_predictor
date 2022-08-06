@@ -1,5 +1,6 @@
 import pymongo
 from predictor.individual_tests import head_to_head
+from model import mongo_client
 
 
 def get_score(winner_name, entity_name, weight_score):
@@ -9,12 +10,9 @@ def get_score(winner_name, entity_name, weight_score):
         return 0
 
 
-client = pymongo.MongoClient("mongodb://localhost:27017/")
-cs_matches_db = client["cs_matches"]
-matches_doc = cs_matches_db["matches"]
-
-metadata_db = client["metadata"]
-current_weights_doc = metadata_db["current_weights"]
+client = mongo_client.MongoClient()
+matches_doc = client.get_matches_document()
+current_weights_doc = client.get_weights_document()
 
 current_weights = current_weights_doc.find_one(sort=[("current_time", pymongo.DESCENDING)])
 

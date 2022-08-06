@@ -1,11 +1,10 @@
 import requests
 from bs4 import BeautifulSoup
-import pymongo
+from model import mongo_client
 
 
-client = pymongo.MongoClient("mongodb://localhost:27017/")
-cs_matches_db = client["cs_matches"]
-matches_doc = cs_matches_db["matches"]
+client = mongo_client.MongoClient()
+matches_doc = client.get_matches_document()
 
 no_results = matches_doc.find({"prediction_correct": None})
 
@@ -32,15 +31,15 @@ for match in no_results:
             raise Exception("Team not a part of this match " + team_name.string + " " + match_url)
 
     updated_match = matches_doc.find_one({"_id": match["_id"]})
+    prediction_correct = False
 
     if updated_match["team_score"] > updated_match["opponent_score"]:
         if updated_match["prediction"] == updated_match["team"]["name"]:
-            matches_doc.update_one({"_id": updated_match["_id"]}, {"$set": {"prediction_correct": True, "result_assessed": False}})
-        else:
-            matches_doc.update_one({"_id": updated_match["_id"]}, {"$set": {"prediction_correct": False, "result_assessed": False}})
+            prediction_correct = True
     else:
-        if updated_match["prediction"] == updated_match["team"]["name"]:
-            matches_doc.update_one({"_id": updated_match["_id"]}, {"$set": {"prediction_correct": False, "result_assessed": False}})
-        else:
-            matches_doc.update_one({"_id": updated_match["_id"]}, {"$set": {"prediction_correct": True, "result_assessed": False}})
+        if updated_match["prediction"] != updated_match["team"]["name"]:
+            prediction_correct = True
+
+    matches_doc.update_one({"_id": updated_match["_id"]},
+                           {"$set": {"prediction_correct": prediction_correct, "result_assessed": False}})
 

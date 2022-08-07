@@ -3,9 +3,13 @@ from predictor.individual_tests import head_to_head, rank_difference
 from model import mongo_client
 
 
-def get_score(winner_name, entity_name, base_score, weight_score):
-    if winner_name == entity_name:
-        return base_score * weight_score
+def get_score(test, entity_name):
+    test_winner = test.calculate_winner(match)
+    test_score = test.get_base_score(match)
+    test_weight = test.get_weight(current_weights)
+
+    if test_winner == entity_name:
+        return test_score * test_weight
     else:
         return 0
 
@@ -27,18 +31,12 @@ for match in not_predicted:
     opponent_name = match["opponent"]["name"]
 
     # head to head
-    head_to_head_winner = head_to_head.calculate_winner(match)
-    head_to_head_base_score = head_to_head.get_base_score(match)
-    head_to_head_weight = head_to_head.get_weight(current_weights)
-    team_score += get_score(head_to_head_winner, team_name, head_to_head_base_score, head_to_head_weight)
-    opponent_score += get_score(head_to_head_winner, opponent_name, head_to_head_base_score, head_to_head_weight)
+    team_score += get_score(head_to_head, team_name)
+    opponent_score += get_score(head_to_head, opponent_name)
 
     # rank difference
-    rank_difference_winner = rank_difference.calculate_winner(match)
-    rank_difference_score = rank_difference.get_base_score(match)
-    rank_difference_weight = rank_difference.get_weight(current_weights)
-    team_score += get_score(rank_difference_winner, team_name, rank_difference_score, rank_difference_weight)
-    opponent_score += get_score(rank_difference_winner, opponent_name, rank_difference_score, rank_difference_weight)
+    team_score += get_score(rank_difference, team_name)
+    opponent_score += get_score(rank_difference, opponent_name)
 
     if team_score >= opponent_score:
         winner = team_name

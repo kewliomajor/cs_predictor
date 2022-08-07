@@ -46,6 +46,8 @@ for match in no_assessment:
     rank_difference_winner = rank_difference.calculate_winner(match)
     calculated_rank_difference_weight = get_new_score(match, calculated_rank_difference_weight)
 
+    matches_doc.update_one({"_id": match["_id"]}, {"$set": {"result_assessed": True}})
+
 
 new_weights = weights_class.Weights()
 new_weights.set_head_to_head_weight(calculated_head_to_head_weight)

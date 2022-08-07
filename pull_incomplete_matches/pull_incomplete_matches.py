@@ -37,6 +37,9 @@ for match in matches:
     match_urls.append(base_url + match_url)
 
 for url in match_urls:
+    existing = matches_doc.find_one({"url": url})
+    if existing is not None:
+        continue
     page = requests.get(url)
     match_page = BeautifulSoup(page.content, "html.parser")
     match_object = match_processor.process_match(match_page)

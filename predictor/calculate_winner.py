@@ -21,6 +21,7 @@ current_weights_doc = client.get_weights_document()
 current_weights = current_weights_doc.find_one(sort=[("current_time", pymongo.DESCENDING)])
 
 not_predicted = matches_doc.find({"prediction": None})
+
 head_to_head = head_to_head.HeadToHead()
 rank_difference = rank_difference.RankDifference()
 

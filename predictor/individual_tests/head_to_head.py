@@ -7,5 +7,12 @@ class HeadToHead(BaseTest):
         super().__init__("head_to_head_weight")
 
     @staticmethod
+    def calculate_winner(match):
+        if match["team_wins"] >= match["opponent_wins"]:
+            return match["team"]["name"]
+        else:
+            return match["opponent"]["name"]
+
+    @staticmethod
     def get_base_score(match):
         return 1

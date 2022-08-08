@@ -23,6 +23,9 @@ for match in no_results:
         if score is None:
             score = team_score.find("div", class_="lost")
 
+        if score is None:
+            break
+
         if match["team"]["name"] == team_name.string:
             matches_doc.update_one({"_id": match["_id"]}, {"$set": {"team_score": int(score.string)}})
         elif match["opponent"]["name"] == team_name.string:
@@ -32,6 +35,9 @@ for match in no_results:
 
     updated_match = matches_doc.find_one({"_id": match["_id"]})
     prediction_correct = False
+
+    if "team_score" not in updated_match:
+        continue
 
     if updated_match["team_score"] > updated_match["opponent_score"]:
         if updated_match["prediction"] == updated_match["team"]["name"]:

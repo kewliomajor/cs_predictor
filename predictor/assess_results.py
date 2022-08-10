@@ -1,5 +1,6 @@
 import pymongo
 from predictor.individual_tests import head_to_head, rank_difference
+from predictor.individual_tests.maps import ancient, dust2, inferno, mirage, nuke, overpass, vertigo
 import json
 from model import weights_class
 from model import mongo_client
@@ -9,16 +10,16 @@ def to_dict(obj):
     return json.loads(json.dumps(obj, default=lambda o: o.__dict__))
 
 
-def get_new_score(current_match, calculated_weight):
+def get_new_score(current_match, calculated_weight, winner):
     if calculated_weight is None:
         return 100
     if current_match["prediction_correct"] is True:
-        if head_to_head_winner == current_match["prediction"]:
+        if winner == current_match["prediction"]:
             calculated_weight += 1
         else:
             calculated_weight -= 1
     else:
-        if head_to_head_winner == current_match["prediction"]:
+        if winner == current_match["prediction"]:
             calculated_weight -= 1
         else:
             calculated_weight += 1
@@ -31,7 +32,11 @@ current_weights_doc = client.get_weights_document()
 
 current_weights = current_weights_doc.find_one(sort=[("current_time", pymongo.DESCENDING)])
 
-no_assessment = matches_doc.find({"result_assessed": False})
+no_assessment = matches_doc.find({"result_assessed": False, "weights_id": current_weights["_id"]})
+
+if no_assessment.retrieved == 0:
+    print("No unassessed matches for current weights entry: " + str(current_weights["_id"]))
+    exit()
 
 head_to_head = head_to_head.HeadToHead()
 calculated_head_to_head_weight = head_to_head.get_weight(current_weights)
@@ -39,12 +44,50 @@ calculated_head_to_head_weight = head_to_head.get_weight(current_weights)
 rank_difference = rank_difference.RankDifference()
 calculated_rank_difference_weight = rank_difference.get_weight(current_weights)
 
+# maps
+ancient = ancient.Ancient()
+calculated_ancient_weight = ancient.get_weight(current_weights)
+dust2 = dust2.Dust2()
+calculated_dust2_weight = dust2.get_weight(current_weights)
+inferno = inferno.Inferno()
+calculated_inferno_weight = inferno.get_weight(current_weights)
+mirage = mirage.Mirage()
+calculated_mirage_weight = mirage.get_weight(current_weights)
+nuke = nuke.Nuke()
+calculated_nuke_weight = nuke.get_weight(current_weights)
+overpass = overpass.Overpass()
+calculated_overpass_weight = overpass.get_weight(current_weights)
+vertigo = vertigo.Vertigo()
+calculated_vertigo_weight = vertigo.get_weight(current_weights)
+
 for match in no_assessment:
     head_to_head_winner = head_to_head.calculate_winner(match)
-    calculated_head_to_head_weight = get_new_score(match, calculated_head_to_head_weight)
+    calculated_head_to_head_weight = get_new_score(match, calculated_head_to_head_weight, head_to_head_winner)
 
     rank_difference_winner = rank_difference.calculate_winner(match)
-    calculated_rank_difference_weight = get_new_score(match, calculated_rank_difference_weight)
+    calculated_rank_difference_weight = get_new_score(match, calculated_rank_difference_weight, rank_difference_winner)
+
+    # maps
+    ancient_winner = ancient.calculate_winner(match)
+    calculated_ancient_weight = get_new_score(match, calculated_ancient_weight, ancient_winner)
+
+    dust2_winner = dust2.calculate_winner(match)
+    calculated_dust2_weight = get_new_score(match, calculated_dust2_weight, dust2_winner)
+
+    inferno_winner = inferno.calculate_winner(match)
+    calculated_inferno_weight = get_new_score(match, calculated_inferno_weight, inferno_winner)
+
+    mirage_winner = mirage.calculate_winner(match)
+    calculated_mirage_weight = get_new_score(match, calculated_mirage_weight, mirage_winner)
+
+    nuke_winner = nuke.calculate_winner(match)
+    calculated_nuke_weight = get_new_score(match, calculated_nuke_weight, nuke_winner)
+
+    overpass_winner = overpass.calculate_winner(match)
+    calculated_overpass_weight = get_new_score(match, calculated_overpass_weight, overpass_winner)
+
+    vertigo_winner = vertigo.calculate_winner(match)
+    calculated_vertigo_weight = get_new_score(match, calculated_vertigo_weight, vertigo_winner)
 
     matches_doc.update_one({"_id": match["_id"]}, {"$set": {"result_assessed": True}})
 
@@ -52,5 +95,12 @@ for match in no_assessment:
 new_weights = weights_class.Weights()
 new_weights.set_head_to_head_weight(calculated_head_to_head_weight)
 new_weights.set_rank_difference_weight(calculated_rank_difference_weight)
+new_weights.set_ancient_weight(calculated_ancient_weight)
+new_weights.set_dust2_weight(calculated_dust2_weight)
+new_weights.set_inferno_weight(calculated_inferno_weight)
+new_weights.set_mirage_weight(calculated_mirage_weight)
+new_weights.set_nuke_weight(calculated_nuke_weight)
+new_weights.set_overpass_weight(calculated_overpass_weight)
+new_weights.set_vertigo_weight(calculated_vertigo_weight)
 print(to_dict(new_weights))
-# current_weights_doc.insert_one(to_dict(new_weights))
+current_weights_doc.insert_one(to_dict(new_weights))

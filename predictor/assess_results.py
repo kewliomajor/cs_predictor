@@ -33,9 +33,11 @@ current_weights_doc = client.get_weights_document()
 
 current_weights = current_weights_doc.find_one(sort=[("current_time", pymongo.DESCENDING)])
 
-no_assessment = matches_doc.find({"result_assessed": False, "weights_id": current_weights["_id"]})
+query = {"result_assessed": False, "weights_id": current_weights["_id"]}
+count = matches_doc.count_documents(query)
+no_assessment = matches_doc.find(query)
 
-if no_assessment.retrieved == 0:
+if count == 0:
     print("No unassessed matches for current weights entry: " + str(current_weights["_id"]))
     exit()
 

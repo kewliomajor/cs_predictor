@@ -45,4 +45,7 @@ for url in match_urls:
     match_object = match_processor.process_match(match_page)
     match_object.url = url
 
+    if match_object.team.name is None or match_object.opponent.name is None:
+        print("Match is missing 1 or more participants: " + url)
+        continue
     matches_doc.insert_one(to_dict(match_object))

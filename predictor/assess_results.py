@@ -1,6 +1,7 @@
 import pymongo
 from predictor.individual_tests import head_to_head, rank_difference
 from predictor.individual_tests.maps import ancient, dust2, inferno, mirage, nuke, overpass, vertigo
+from predictor.individual_tests.recent_history import maps_lost, maps_won, match_win_percentage, matches_won, matches_lost
 import json
 from model import weights_class
 from model import mongo_client
@@ -60,6 +61,18 @@ calculated_overpass_weight = overpass.get_weight(current_weights)
 vertigo = vertigo.Vertigo()
 calculated_vertigo_weight = vertigo.get_weight(current_weights)
 
+# history
+maps_won = maps_won.MapsWon()
+calculated_maps_won_weight = maps_won.get_weight(current_weights)
+maps_lost = maps_lost.MapsLost()
+calculated_maps_lost_weight = maps_lost.get_weight(current_weights)
+match_win_percentage = match_win_percentage.MatchesWinPercentage()
+calculated_match_win_percentage_weight = match_win_percentage.get_weight(current_weights)
+matches_won = matches_won.MatchesWon()
+calculated_matches_won_weight = matches_won.get_weight(current_weights)
+matches_lost = matches_lost.MatchesLost()
+calculated_matches_lost_weight = matches_lost.get_weight(current_weights)
+
 for match in no_assessment:
     head_to_head_winner = head_to_head.calculate_winner(match)
     calculated_head_to_head_weight = get_new_score(match, calculated_head_to_head_weight, head_to_head_winner)
@@ -89,7 +102,23 @@ for match in no_assessment:
     vertigo_winner = vertigo.calculate_winner(match)
     calculated_vertigo_weight = get_new_score(match, calculated_vertigo_weight, vertigo_winner)
 
-    matches_doc.update_one({"_id": match["_id"]}, {"$set": {"result_assessed": True}})
+    # history
+    maps_won_winner = maps_won.calculate_winner(match)
+    calculated_maps_won_weight = get_new_score(match, calculated_maps_won_weight, maps_won_winner)
+
+    maps_lost_winner = maps_lost.calculate_winner(match)
+    calculated_maps_lost_weight = get_new_score(match, calculated_maps_lost_weight, maps_lost_winner)
+
+    match_win_percentage_winner = match_win_percentage.calculate_winner(match)
+    calculated_match_win_percentage_weight = get_new_score(match, calculated_match_win_percentage_weight, match_win_percentage_winner)
+
+    matches_won_winner = matches_won.calculate_winner(match)
+    calculated_matches_won_weight = get_new_score(match, calculated_matches_won_weight, matches_won_winner)
+
+    matches_lost_winner = matches_lost.calculate_winner(match)
+    calculated_matches_lost_weight = get_new_score(match, calculated_matches_lost_weight, matches_lost_winner)
+
+    # matches_doc.update_one({"_id": match["_id"]}, {"$set": {"result_assessed": True}})
 
 
 new_weights = weights_class.Weights()
@@ -103,4 +132,4 @@ new_weights.set_nuke_weight(calculated_nuke_weight)
 new_weights.set_overpass_weight(calculated_overpass_weight)
 new_weights.set_vertigo_weight(calculated_vertigo_weight)
 print(to_dict(new_weights))
-current_weights_doc.insert_one(to_dict(new_weights))
+# current_weights_doc.insert_one(to_dict(new_weights))

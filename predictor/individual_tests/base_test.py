@@ -14,8 +14,7 @@ class BaseTest:
             if map_entity["name"] == map_name:
                 return map_entity
 
-        raise Exception("Map " + map_name + " is not a recognized map in match " + match["_id"])
-
+        raise Exception("Map " + map_name + " is not a recognized map in match " + str(match["_id"]))
 
     def get_weight(self, current_weights):
         if self.weight_name in current_weights:

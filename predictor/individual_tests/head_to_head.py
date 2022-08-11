@@ -15,4 +15,7 @@ class HeadToHead(BaseTest):
 
     @staticmethod
     def get_base_score(match):
-        return 1
+        value = abs(match["team_wins"] - match["opponent_wins"])
+        if value == 0:
+            return 1
+        return value

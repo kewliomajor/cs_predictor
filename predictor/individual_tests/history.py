@@ -18,8 +18,9 @@ class History(BaseTest):
         self.previous_match = None
 
     def populate_stats(self, match):
-        if self.previous_match["_id"] == match["_id"]:
-            return
+        if self.previous_match is not None:
+            if self.previous_match["_id"] == match["_id"]:
+                return
 
         for past_match in match["team"]["match_history"]:
             if past_match["max_maps"] == 1:

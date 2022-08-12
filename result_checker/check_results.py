@@ -46,6 +46,7 @@ for match in no_results:
         if updated_match["prediction"] != updated_match["team"]["name"]:
             prediction_correct = True
 
+    print("adding prediction result " + str(prediction_correct) + " for match " + str(updated_match["_id"]))
     matches_doc.update_one({"_id": updated_match["_id"]},
                            {"$set": {"prediction_correct": prediction_correct, "result_assessed": False}})
 

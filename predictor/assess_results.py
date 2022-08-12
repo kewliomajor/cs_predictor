@@ -170,7 +170,7 @@ for match in no_assessment:
     matches_lost_winner = matches_lost.calculate_winner(match)
     calculated_matches_lost_weight = get_new_score(match, calculated_matches_lost_weight, matches_lost_winner, matches_lost)
 
-    # matches_doc.update_one({"_id": match["_id"]}, {"$set": {"result_assessed": True}})
+    matches_doc.update_one({"_id": match["_id"]}, {"$set": {"result_assessed": True}})
 
 
 new_weights = weights_class.Weights()
@@ -183,5 +183,10 @@ new_weights.set_mirage_weight(calculated_mirage_weight)
 new_weights.set_nuke_weight(calculated_nuke_weight)
 new_weights.set_overpass_weight(calculated_overpass_weight)
 new_weights.set_vertigo_weight(calculated_vertigo_weight)
+new_weights.set_maps_won_weight(calculated_maps_won_weight)
+new_weights.set_maps_lost_weight(calculated_maps_lost_weight)
+new_weights.set_match_win_percentage_weight(calculated_match_win_percentage_weight)
+new_weights.set_matches_won_weight(calculated_matches_won_weight)
+new_weights.set_matches_lost_weight(calculated_matches_lost_weight)
 print(to_dict(new_weights))
-# current_weights_doc.insert_one(to_dict(new_weights))
+current_weights_doc.insert_one(to_dict(new_weights))

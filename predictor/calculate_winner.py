@@ -91,4 +91,5 @@ for match in not_predicted:
     else:
         winner = opponent_name
 
+    print("Predicting " + winner + " to win in match of " + team_name + " (" + str(team_score) + ") vs " + opponent_name + " (" + str(opponent_score) + ")")
     matches_doc.update_one({"_id": match["_id"]}, {"$set": {"prediction": winner, "weights_id": current_weights["_id"]}})

@@ -14,6 +14,11 @@ class Weights:
         self.nuke_weight = 0.0
         self.overpass_weight = 0.0
         self.vertigo_weight = 0.0
+        self.maps_won = 0.0
+        self.maps_lost = 0.0
+        self.match_win_percentage = 0.0
+        self.matches_won = 0.0
+        self.matches_lost = 0.0
 
     def set_head_to_head_weight(self, weight):
         self.head_to_head_weight = self.get_limited_weight(weight)
@@ -41,6 +46,21 @@ class Weights:
 
     def set_vertigo_weight(self, weight):
         self.vertigo_weight = self.get_limited_weight(weight)
+
+    def set_maps_won_weight(self, weight):
+        self.maps_won = self.get_limited_weight(weight)
+
+    def set_maps_lost_weight(self, weight):
+        self.maps_lost = self.get_limited_weight(weight)
+
+    def set_match_win_percentage_weight(self, weight):
+        self.match_win_percentage = self.get_limited_weight(weight)
+
+    def set_matches_won_weight(self, weight):
+        self.matches_won = self.get_limited_weight(weight)
+
+    def set_matches_lost_weight(self, weight):
+        self.matches_lost = self.get_limited_weight(weight)
 
     @staticmethod
     def get_limited_weight(weight):

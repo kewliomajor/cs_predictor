@@ -5,10 +5,10 @@ from predictor.individual_tests.recent_history import maps_lost, maps_won, match
 from model import mongo_client
 
 
-def get_score(test, entity_name, current_match):
-    test_winner = test.calculate_winner(current_match)
-    test_score = test.get_base_score(current_match)
-    test_weight = test.get_weight(current_weights)
+def get_score(current_test, entity_name, current_match):
+    test_winner = current_test.calculate_winner(current_match)
+    test_score = current_test.get_base_score(current_match)
+    test_weight = current_test.get_weight(current_weights)
 
     if test_weight is None:
         return 0
@@ -27,22 +27,24 @@ current_weights = current_weights_doc.find_one(sort=[("current_time", pymongo.DE
 
 not_predicted = matches_doc.find({"prediction": None})
 
-head_to_head = head_to_head.HeadToHead()
-rank_difference = rank_difference.RankDifference()
+test_array = []
 
-ancient = ancient.Ancient()
-dust2 = dust2.Dust2()
-inferno = inferno.Inferno()
-mirage = mirage.Mirage()
-nuke = nuke.Nuke()
-overpass = overpass.Overpass()
-vertigo = vertigo.Vertigo()
+test_array.append(head_to_head.HeadToHead())
+test_array.append(rank_difference.RankDifference())
 
-maps_lost = maps_lost.MapsLost()
-maps_won = maps_won.MapsWon()
-match_win_percentage = match_win_percentage.MatchesWinPercentage()
-matches_won = matches_won.MatchesWon()
-matches_lost = matches_lost.MatchesLost()
+test_array.append(ancient.Ancient())
+test_array.append(dust2.Dust2())
+test_array.append(inferno.Inferno())
+test_array.append(mirage.Mirage())
+test_array.append(nuke.Nuke())
+test_array.append(overpass.Overpass())
+test_array.append(vertigo.Vertigo())
+
+test_array.append(maps_lost.MapsLost())
+test_array.append(maps_won.MapsWon())
+test_array.append(match_win_percentage.MatchesWinPercentage())
+test_array.append(matches_won.MatchesWon())
+test_array.append(matches_lost.MatchesLost())
 
 for match in not_predicted:
     team_score = 0
@@ -50,41 +52,9 @@ for match in not_predicted:
     team_name = match["team"]["name"]
     opponent_name = match["opponent"]["name"]
 
-    # head to head
-    team_score += get_score(head_to_head, team_name, match)
-    opponent_score += get_score(head_to_head, opponent_name, match)
-
-    # rank difference
-    team_score += get_score(rank_difference, team_name, match)
-    opponent_score += get_score(rank_difference, opponent_name, match)
-
-    # maps
-    team_score += get_score(ancient, team_name, match)
-    opponent_score += get_score(ancient, opponent_name, match)
-    team_score += get_score(dust2, team_name, match)
-    opponent_score += get_score(dust2, opponent_name, match)
-    team_score += get_score(inferno, team_name, match)
-    opponent_score += get_score(inferno, opponent_name, match)
-    team_score += get_score(mirage, team_name, match)
-    opponent_score += get_score(mirage, opponent_name, match)
-    team_score += get_score(nuke, team_name, match)
-    opponent_score += get_score(nuke, opponent_name, match)
-    team_score += get_score(overpass, team_name, match)
-    opponent_score += get_score(overpass, opponent_name, match)
-    team_score += get_score(vertigo, team_name, match)
-    opponent_score += get_score(vertigo, opponent_name, match)
-
-    # history
-    team_score += get_score(maps_lost, team_name, match)
-    opponent_score += get_score(maps_lost, opponent_name, match)
-    team_score += get_score(maps_won, team_name, match)
-    opponent_score += get_score(maps_won, opponent_name, match)
-    team_score += get_score(match_win_percentage, team_name, match)
-    opponent_score += get_score(match_win_percentage, opponent_name, match)
-    team_score += get_score(matches_won, team_name, match)
-    opponent_score += get_score(matches_won, opponent_name, match)
-    team_score += get_score(matches_lost, team_name, match)
-    opponent_score += get_score(matches_lost, opponent_name, match)
+    for test in test_array:
+        team_score += get_score(test, team_name, match)
+        opponent_score += get_score(test, opponent_name, match)
 
     if team_score >= opponent_score:
         winner = team_name

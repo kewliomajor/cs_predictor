@@ -40,12 +40,12 @@ def get_changed_weight(total_score):
     return change
 
 
-def get_new_score(current_match, calculated_weight, winner, test):
-    test_winner = test.calculate_winner(current_match)
-    test_score = test.get_base_score(match)
-    test_weight = test.get_weight(current_weights)
+def get_new_score(current_match, calculated_weight, current_winner, current_test):
+    test_winner = current_test.calculate_winner(current_match)
+    test_score = current_test.get_base_score(match)
+    test_weight = current_test.get_weight(current_weights)
 
-    if test_winner == winner:
+    if test_winner == current_winner:
         if test_weight is None:
             total_score = 0
         else:
@@ -56,28 +56,28 @@ def get_new_score(current_match, calculated_weight, winner, test):
     if calculated_weight is None:
         return 100
     if current_match["prediction_correct"] is True:
-        if winner == current_match["prediction"]:
+        if current_winner == current_match["prediction"]:
             if debug:
-                print("adding " + test.weight_name + " weight based on " + str(total_score) + ", before: " + str(calculated_weight))
+                print("adding " + current_test.weight_name + " weight based on " + str(total_score) + ", before: " + str(calculated_weight))
             calculated_weight += get_changed_weight(total_score)
             if debug:
                 print("after " + str(calculated_weight))
         else:
             if debug:
-                print("subtracting " + test.weight_name + " weight based on " + str(total_score) + ", before: " + str(calculated_weight))
+                print("subtracting " + current_test.weight_name + " weight based on " + str(total_score) + ", before: " + str(calculated_weight))
             calculated_weight -= get_changed_weight(total_score)
             if debug:
                 print("after " + str(calculated_weight))
     else:
-        if winner == current_match["prediction"]:
+        if current_winner == current_match["prediction"]:
             if debug:
-                print("subtracting " + test.weight_name + " weight based on " + str(total_score) + ", before: " + str(calculated_weight))
+                print("subtracting " + current_test.weight_name + " weight based on " + str(total_score) + ", before: " + str(calculated_weight))
             calculated_weight -= get_changed_weight(total_score)
             if debug:
                 print("after " + str(calculated_weight))
         else:
             if debug:
-                print("adding " + test.weight_name + " weight based on " + str(total_score) + ", before: " + str(calculated_weight))
+                print("adding " + current_test.weight_name + " weight based on " + str(total_score) + ", before: " + str(calculated_weight))
             calculated_weight += get_changed_weight(total_score)
             if debug:
                 print("after " + str(calculated_weight))

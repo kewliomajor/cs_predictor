@@ -1,0 +1,2 @@
+class UnrecognizedMapException(Exception):
+    pass

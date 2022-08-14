@@ -1,6 +1,7 @@
 import pymongo
 from predictor.individual_tests import head_to_head, rank_difference
-from predictor.individual_tests.maps import ancient, dust2, inferno, mirage, nuke, overpass, vertigo
+from predictor.individual_tests.maps.num_played import ancient_played, dust2_played, inferno_played, mirage_played, nuke_played, overpass_played, vertigo_played
+from predictor.individual_tests.maps.win_percentage import ancient_won, dust2_won, inferno_won, mirage_won, nuke_won, overpass_won, vertigo_won
 from predictor.individual_tests.recent_history import maps_lost, maps_won, match_win_percentage, matches_won, matches_lost
 import json
 from model import weights_class
@@ -8,10 +9,16 @@ from model import mongo_client
 
 
 debug = False
+print_only = True
 
 
 def to_dict(obj):
     return json.loads(json.dumps(obj, default=lambda o: o.__dict__))
+
+
+def add_test(test_list, current_test, current_weights_object):
+    test_list.append({"test": current_test, "calculated_weight": current_test.get_weight(current_weights_object)})
+    return test_list
 
 
 def get_changed_weight(total_score):
@@ -91,102 +98,73 @@ if count == 0:
     print("No unassessed matches for current weights entry: " + str(current_weights["_id"]))
     exit()
 
+tests_and_weights = []
+
 head_to_head = head_to_head.HeadToHead()
-calculated_head_to_head_weight = head_to_head.get_weight(current_weights)
+tests_and_weights = add_test(tests_and_weights, head_to_head, current_weights)
 
 rank_difference = rank_difference.RankDifference()
-calculated_rank_difference_weight = rank_difference.get_weight(current_weights)
+tests_and_weights = add_test(tests_and_weights, rank_difference, current_weights)
 
 # maps
-ancient = ancient.Ancient()
-calculated_ancient_weight = ancient.get_weight(current_weights)
-dust2 = dust2.Dust2()
-calculated_dust2_weight = dust2.get_weight(current_weights)
-inferno = inferno.Inferno()
-calculated_inferno_weight = inferno.get_weight(current_weights)
-mirage = mirage.Mirage()
-calculated_mirage_weight = mirage.get_weight(current_weights)
-nuke = nuke.Nuke()
-calculated_nuke_weight = nuke.get_weight(current_weights)
-overpass = overpass.Overpass()
-calculated_overpass_weight = overpass.get_weight(current_weights)
-vertigo = vertigo.Vertigo()
-calculated_vertigo_weight = vertigo.get_weight(current_weights)
+ancient_played = ancient_played.AncientPlayed()
+tests_and_weights = add_test(tests_and_weights, ancient_played, current_weights)
+dust2_played = dust2_played.Dust2Played()
+tests_and_weights = add_test(tests_and_weights, dust2_played, current_weights)
+inferno_played = inferno_played.InfernoPlayed()
+tests_and_weights = add_test(tests_and_weights, inferno_played, current_weights)
+mirage_played = mirage_played.MiragePlayed()
+tests_and_weights = add_test(tests_and_weights, mirage_played, current_weights)
+nuke_played = nuke_played.NukePlayed()
+tests_and_weights = add_test(tests_and_weights, nuke_played, current_weights)
+overpass_played = overpass_played.OverpassPlayed()
+tests_and_weights = add_test(tests_and_weights, overpass_played, current_weights)
+vertigo_played = vertigo_played.VertigoPlayed()
+tests_and_weights = add_test(tests_and_weights, vertigo_played, current_weights)
+
+ancient_won = ancient_won.AncientWon()
+tests_and_weights = add_test(tests_and_weights, ancient_won, current_weights)
+dust2_won = dust2_won.Dust2Won()
+tests_and_weights = add_test(tests_and_weights, dust2_won, current_weights)
+inferno_won = inferno_won.InfernoWon()
+tests_and_weights = add_test(tests_and_weights, inferno_won, current_weights)
+mirage_won = mirage_won.MirageWon()
+tests_and_weights = add_test(tests_and_weights, mirage_won, current_weights)
+nuke_won = nuke_won.NukeWon()
+tests_and_weights = add_test(tests_and_weights, nuke_won, current_weights)
+overpass_won = overpass_won.OverpassWon()
+tests_and_weights = add_test(tests_and_weights, overpass_won, current_weights)
+vertigo_won = vertigo_won.VertigoWon()
+tests_and_weights = add_test(tests_and_weights, vertigo_won, current_weights)
 
 # history
 maps_won = maps_won.MapsWon()
-calculated_maps_won_weight = maps_won.get_weight(current_weights)
+tests_and_weights = add_test(tests_and_weights, maps_won, current_weights)
 maps_lost = maps_lost.MapsLost()
-calculated_maps_lost_weight = maps_lost.get_weight(current_weights)
+tests_and_weights = add_test(tests_and_weights, maps_lost, current_weights)
 match_win_percentage = match_win_percentage.MatchesWinPercentage()
-calculated_match_win_percentage_weight = match_win_percentage.get_weight(current_weights)
+tests_and_weights = add_test(tests_and_weights, match_win_percentage, current_weights)
 matches_won = matches_won.MatchesWon()
-calculated_matches_won_weight = matches_won.get_weight(current_weights)
+tests_and_weights = add_test(tests_and_weights, matches_won, current_weights)
 matches_lost = matches_lost.MatchesLost()
-calculated_matches_lost_weight = matches_lost.get_weight(current_weights)
+tests_and_weights = add_test(tests_and_weights, matches_lost, current_weights)
 
 for match in no_assessment:
-    head_to_head_winner = head_to_head.calculate_winner(match)
-    calculated_head_to_head_weight = get_new_score(match, calculated_head_to_head_weight, head_to_head_winner, head_to_head)
+    for test_and_weight in tests_and_weights:
+        test = test_and_weight["test"]
+        old_weight = test_and_weight["calculated_weight"]
+        winner = test.calculate_winner(match)
+        new_weight = get_new_score(match, old_weight, winner, test)
+        test_and_weight["calculated_weight"] = new_weight
 
-    rank_difference_winner = rank_difference.calculate_winner(match)
-    calculated_rank_difference_weight = get_new_score(match, calculated_rank_difference_weight, rank_difference_winner, rank_difference)
-
-    # maps
-    ancient_winner = ancient.calculate_winner(match)
-    calculated_ancient_weight = get_new_score(match, calculated_ancient_weight, ancient_winner, ancient)
-
-    dust2_winner = dust2.calculate_winner(match)
-    calculated_dust2_weight = get_new_score(match, calculated_dust2_weight, dust2_winner, dust2)
-
-    inferno_winner = inferno.calculate_winner(match)
-    calculated_inferno_weight = get_new_score(match, calculated_inferno_weight, inferno_winner, inferno)
-
-    mirage_winner = mirage.calculate_winner(match)
-    calculated_mirage_weight = get_new_score(match, calculated_mirage_weight, mirage_winner, mirage)
-
-    nuke_winner = nuke.calculate_winner(match)
-    calculated_nuke_weight = get_new_score(match, calculated_nuke_weight, nuke_winner, nuke)
-
-    overpass_winner = overpass.calculate_winner(match)
-    calculated_overpass_weight = get_new_score(match, calculated_overpass_weight, overpass_winner, overpass)
-
-    vertigo_winner = vertigo.calculate_winner(match)
-    calculated_vertigo_weight = get_new_score(match, calculated_vertigo_weight, vertigo_winner, vertigo)
-
-    # history
-    maps_won_winner = maps_won.calculate_winner(match)
-    calculated_maps_won_weight = get_new_score(match, calculated_maps_won_weight, maps_won_winner, maps_won)
-
-    maps_lost_winner = maps_lost.calculate_winner(match)
-    calculated_maps_lost_weight = get_new_score(match, calculated_maps_lost_weight, maps_lost_winner, maps_lost)
-
-    match_win_percentage_winner = match_win_percentage.calculate_winner(match)
-    calculated_match_win_percentage_weight = get_new_score(match, calculated_match_win_percentage_weight, match_win_percentage_winner, match_win_percentage)
-
-    matches_won_winner = matches_won.calculate_winner(match)
-    calculated_matches_won_weight = get_new_score(match, calculated_matches_won_weight, matches_won_winner, matches_won)
-
-    matches_lost_winner = matches_lost.calculate_winner(match)
-    calculated_matches_lost_weight = get_new_score(match, calculated_matches_lost_weight, matches_lost_winner, matches_lost)
-
-    matches_doc.update_one({"_id": match["_id"]}, {"$set": {"result_assessed": True}})
-
+    if not print_only:
+        matches_doc.update_one({"_id": match["_id"]}, {"$set": {"result_assessed": True}})
 
 new_weights = weights_class.Weights()
-new_weights.set_head_to_head_weight(calculated_head_to_head_weight)
-new_weights.set_rank_difference_weight(calculated_rank_difference_weight)
-new_weights.set_ancient_weight(calculated_ancient_weight)
-new_weights.set_dust2_weight(calculated_dust2_weight)
-new_weights.set_inferno_weight(calculated_inferno_weight)
-new_weights.set_mirage_weight(calculated_mirage_weight)
-new_weights.set_nuke_weight(calculated_nuke_weight)
-new_weights.set_overpass_weight(calculated_overpass_weight)
-new_weights.set_vertigo_weight(calculated_vertigo_weight)
-new_weights.set_maps_won_weight(calculated_maps_won_weight)
-new_weights.set_maps_lost_weight(calculated_maps_lost_weight)
-new_weights.set_match_win_percentage_weight(calculated_match_win_percentage_weight)
-new_weights.set_matches_won_weight(calculated_matches_won_weight)
-new_weights.set_matches_lost_weight(calculated_matches_lost_weight)
+for test_and_weight in tests_and_weights:
+    new_weights.set_weight(test_and_weight["test"], test_and_weight["calculated_weight"])
+
 print(to_dict(new_weights))
-current_weights_doc.insert_one(to_dict(new_weights))
+
+if not print_only:
+    current_weights_doc.insert_one(to_dict(new_weights))

@@ -1,3 +1,5 @@
+from model.unrecognized_map import UnrecognizedMapException
+
 
 class BaseTest:
 
@@ -14,10 +16,15 @@ class BaseTest:
             if map_entity["name"] == map_name:
                 return map_entity
 
-        raise Exception("Map " + map_name + " is not a recognized map in match " + str(match["_id"]))
+        string = "Map " + map_name + " is not a recognized map in match " + str(match["_id"]) + " " + match["team"]["name"] + " vs " + match["opponent"]["name"]
+        print(string)
+        raise UnrecognizedMapException(string)
 
     def get_weight(self, current_weights):
         if self.weight_name in current_weights:
             return current_weights[self.weight_name]
         else:
             return None
+
+    def get_weight_name(self):
+        return self.weight_name

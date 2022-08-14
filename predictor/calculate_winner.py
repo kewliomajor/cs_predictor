@@ -1,8 +1,11 @@
 import pymongo
 from predictor.individual_tests import head_to_head, rank_difference
-from predictor.individual_tests.maps import ancient, dust2, inferno, mirage, nuke, overpass, vertigo
+from predictor.individual_tests.maps.num_played import ancient_played, dust2_played, inferno_played, mirage_played, nuke_played, overpass_played, vertigo_played
+from predictor.individual_tests.maps.win_percentage import ancient_won, dust2_won, inferno_won, mirage_won, nuke_won, overpass_won, vertigo_won
 from predictor.individual_tests.recent_history import maps_lost, maps_won, match_win_percentage, matches_won, matches_lost
 from model import mongo_client
+
+print_only = True
 
 
 def get_score(current_test, entity_name, current_match):
@@ -32,13 +35,21 @@ test_array = []
 test_array.append(head_to_head.HeadToHead())
 test_array.append(rank_difference.RankDifference())
 
-test_array.append(ancient.Ancient())
-test_array.append(dust2.Dust2())
-test_array.append(inferno.Inferno())
-test_array.append(mirage.Mirage())
-test_array.append(nuke.Nuke())
-test_array.append(overpass.Overpass())
-test_array.append(vertigo.Vertigo())
+test_array.append(ancient_played.AncientPlayed())
+test_array.append(dust2_played.Dust2Played())
+test_array.append(inferno_played.InfernoPlayed())
+test_array.append(mirage_played.MiragePlayed())
+test_array.append(nuke_played.NukePlayed())
+test_array.append(overpass_played.OverpassPlayed())
+test_array.append(vertigo_played.VertigoPlayed())
+
+test_array.append(ancient_won.AncientWon())
+test_array.append(dust2_won.Dust2Won())
+test_array.append(inferno_won.InfernoWon())
+test_array.append(mirage_won.MirageWon())
+test_array.append(nuke_won.NukeWon())
+test_array.append(overpass_won.OverpassWon())
+test_array.append(vertigo_won.VertigoWon())
 
 test_array.append(maps_lost.MapsLost())
 test_array.append(maps_won.MapsWon())
@@ -62,4 +73,5 @@ for match in not_predicted:
         winner = opponent_name
 
     print("Predicting " + winner + " to win in match of " + team_name + " (" + str(team_score) + ") vs " + opponent_name + " (" + str(opponent_score) + ")")
-    matches_doc.update_one({"_id": match["_id"]}, {"$set": {"prediction": winner, "weights_id": current_weights["_id"]}})
+    if not print_only:
+        matches_doc.update_one({"_id": match["_id"]}, {"$set": {"prediction": winner, "weights_id": current_weights["_id"]}})

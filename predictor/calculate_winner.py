@@ -5,7 +5,7 @@ from predictor.individual_tests.maps.win_percentage import ancient_won, dust2_wo
 from predictor.individual_tests.recent_history import maps_lost, maps_won, match_win_percentage, matches_won, matches_lost
 from model import mongo_client
 
-print_only = True
+print_only = False
 
 
 def get_score(current_test, entity_name, current_match):

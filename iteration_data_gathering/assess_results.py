@@ -22,15 +22,15 @@ def add_test(test_list, current_test, current_weights_object):
 
 
 def get_changed_weight(total_score):
-    if total_score >= 64000:
+    if total_score >= 2000:
         change = 6
-    elif total_score >= 32000:
-        change = 5
-    elif total_score >= 16000:
-        change = 4
-    elif total_score >= 4000:
-        change = 3
     elif total_score >= 1000:
+        change = 5
+    elif total_score >= 500:
+        change = 4
+    elif total_score >= 200:
+        change = 3
+    elif total_score >= 100:
         change = 2
     elif total_score >= 0:
         change = 1
@@ -40,28 +40,23 @@ def get_changed_weight(total_score):
     return change
 
 
-def get_new_score(current_match, calculated_weight, current_winner, current_test):
+def get_new_score(current_match, calculated_weight, current_test):
     test_winner = current_test.calculate_winner(current_match)
     test_score = current_test.get_base_score(match)
     test_weight = current_test.get_weight(current_weights)
 
-    if test_winner == current_winner:
-        if test_weight is None:
-            total_score = 0
-        else:
-            total_score = test_score * test_weight
-    else:
+    if test_weight is None:
         total_score = 0
+    else:
+        total_score = test_score * test_weight
 
     if calculated_weight is None:
         return 100
+
     if current_match["prediction_correct"] is True:
-        if current_winner == current_match["prediction"]:
+        if test_winner == current_match["prediction"]:
             if debug:
-                print("adding " + current_test.weight_name + " weight based on " + str(total_score) + ", before: " + str(calculated_weight))
-            calculated_weight += get_changed_weight(total_score)
-            if debug:
-                print("after " + str(calculated_weight))
+                print("No need to add weight prediction is correct")
         else:
             if debug:
                 print("subtracting " + current_test.weight_name + " weight based on " + str(total_score) + ", before: " + str(calculated_weight))
@@ -69,7 +64,7 @@ def get_new_score(current_match, calculated_weight, current_winner, current_test
             if debug:
                 print("after " + str(calculated_weight))
     else:
-        if current_winner == current_match["prediction"]:
+        if test_winner == current_match["prediction"]:
             if debug:
                 print("subtracting " + current_test.weight_name + " weight based on " + str(total_score) + ", before: " + str(calculated_weight))
             calculated_weight -= get_changed_weight(total_score)
@@ -149,13 +144,16 @@ tests_and_weights = add_test(tests_and_weights, matches_won, current_weights)
 matches_lost = matches_lost.MatchesLost()
 tests_and_weights = add_test(tests_and_weights, matches_lost, current_weights)
 
+total_matches_assessed = 0
+
 for match in no_assessment:
     for test_and_weight in tests_and_weights:
         test = test_and_weight["test"]
         old_weight = test_and_weight["calculated_weight"]
-        winner = test.calculate_winner(match)
-        new_weight = get_new_score(match, old_weight, winner, test)
+        new_weight = get_new_score(match, old_weight, test)
         test_and_weight["calculated_weight"] = new_weight
+
+    total_matches_assessed += 1
 
     if not print_only:
         matches_doc.update_one({"_id": match["_id"]}, {"$set": {"result_assessed": True}})
@@ -164,6 +162,7 @@ new_weights = weights_class.Weights()
 for test_and_weight in tests_and_weights:
     new_weights.set_weight(test_and_weight["test"], test_and_weight["calculated_weight"])
 
+print("Total matches assessed: " + str(total_matches_assessed))
 print(to_dict(new_weights))
 
 if not print_only:

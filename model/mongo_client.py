@@ -13,3 +13,7 @@ class MongoClient:
     def get_weights_document(self):
         metadata_db = self.client["metadata"]
         return metadata_db["current_weights"]
+
+    def get_predictor_accuracy_document(self):
+        predictor_db = self.client["metadata"]
+        return predictor_db["predictor_accuracy"]

@@ -1,17 +1,20 @@
 import json
 from model import mongo_client, all_tests
+from bson.objectid import ObjectId
 
 
 def to_dict(obj):
     return json.loads(json.dumps(obj, default=lambda o: o.__dict__))
 
 
-print_only = True
+print_only = False
 client = mongo_client.MongoClient()
 matches_doc = client.get_matches_document()
 predictor_accuracy_doc = client.get_predictor_accuracy_document()
 
-predictions = matches_doc.find({"prediction_correct": {"$exists": True}})
+query = {"prediction_correct": {"$exists": True}}
+predictions = matches_doc.find(query)
+predictions_count = matches_doc.count_documents(query)
 
 all_tests = all_tests.AllTests()
 test_array = all_tests.get_all_tests()
@@ -43,6 +46,9 @@ for test in test_array:
 
     tests_and_predictors.append({"weight_name": test_weight_name, "predictor_percent": predictor_percent})
 
-print(to_dict(tests_and_predictors))
+element = {"predictors": tests_and_predictors}
+
+print("Matches analyzed: " + str(predictions_count))
+print(to_dict(element))
 if not print_only:
-    predictor_accuracy_doc.insert_one(to_dict(tests_and_predictors))
+    predictor_accuracy_doc.update_one({"_id": ObjectId("62ff9029f693bf31806a6136")}, {"$set": {"predictors": tests_and_predictors}})

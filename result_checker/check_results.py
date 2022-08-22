@@ -15,6 +15,8 @@ for match in no_results:
     soup = BeautifulSoup(page.content, "html.parser")
 
     result_box = soup.find("div", class_="standard-box teamsBox")
+    if result_box is None:
+        continue
     team_scores = result_box.find_all("div", class_="team")
 
     for team_score in team_scores:

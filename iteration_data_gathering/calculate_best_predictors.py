@@ -1,4 +1,5 @@
 import json
+from iteration_data_gathering.individual_deep_dive import rank_difference_performance
 from model import mongo_client, all_tests
 from bson.objectid import ObjectId
 
@@ -52,3 +53,8 @@ print("Matches analyzed: " + str(predictions_count))
 print(to_dict(element))
 if not print_only:
     predictor_accuracy_doc.update_one({"_id": ObjectId("62ff9029f693bf31806a6136")}, {"$set": {"predictors": tests_and_predictors}})
+
+# run the deep dive analysis
+rank_difference_performance.run()
+
+

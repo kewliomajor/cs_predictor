@@ -17,3 +17,7 @@ class MongoClient:
     def get_predictor_accuracy_document(self):
         predictor_db = self.client["metadata"]
         return predictor_db["predictor_accuracy"]
+
+    def get_deep_analysis_document(self):
+        predictor_db = self.client["metadata"]
+        return predictor_db["deep_analysis"]

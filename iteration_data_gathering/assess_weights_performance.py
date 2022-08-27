@@ -2,7 +2,7 @@ from bson.objectid import ObjectId
 from model import mongo_client
 
 # update to assess different weights
-weight_id = ObjectId("62f90842e7c17ee4fe1acb13")
+weight_id = ObjectId("63037f6978dbb16f833d8364")
 
 client = mongo_client.MongoClient()
 matches_doc = client.get_matches_document()

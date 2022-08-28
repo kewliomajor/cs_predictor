@@ -1,5 +1,5 @@
 import json
-from iteration_data_gathering.individual_deep_dive import rank_difference_performance
+from iteration_data_gathering.individual_deep_dive import rank_difference_performance, head_to_head_performance, maps_won_performance, matches_won_performance
 from model import mongo_client, all_tests
 from bson.objectid import ObjectId
 
@@ -56,5 +56,8 @@ if not print_only:
 
 # run the deep dive analysis
 rank_difference_performance.run()
+head_to_head_performance.run()
+maps_won_performance.run()
+matches_won_performance.run()
 
 

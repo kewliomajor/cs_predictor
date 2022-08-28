@@ -24,7 +24,7 @@ def execute(test, test_name):
         predicted_total_winner = match["prediction"]
         predicted_test_winner = test.calculate_winner(match)
 
-        test_score = test.get_base_score(match)
+        test_score = int(test.get_base_score(match))
 
         if test_score not in scores_and_predictors:
             scores_and_predictors[test_score] = {"total": 0, "correct": 0, "percentage": 0}

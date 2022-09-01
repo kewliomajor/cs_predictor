@@ -35,6 +35,8 @@ def plot(item_name):
     trendpoly = np.poly1d(values)
     ax.plot(x, trendpoly(x), label='Regression')
 
+    ax.set_xlabel('score difference')
+    ax.set_ylabel('predictions correct (percentage)')
     ax.legend(loc='upper right')
 
     plt.show()

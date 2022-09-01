@@ -11,3 +11,9 @@
 To assess the performance of a specific weight you can run
 ```iteration_data_gathering/assess_weights_performance.py```
 and give it any uuid for an entry in the weights table
+
+To get the correlation between winning individual tests and winning the entire match run
+```iteration_data_gathering/calculate_besT_predictors.py```
+
+This will also populate some data for deeper analysis, which can be plotted using
+any script in ```data_visualizer``` will give you a scatter plot with a regression line

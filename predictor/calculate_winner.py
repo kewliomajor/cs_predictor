@@ -34,7 +34,7 @@ def calculate_winner(current_match, test_list, current_weights, print_winner=Fal
         current_winner = opponent_name
 
     if print_winner:
-        print("Predicting " + winner + " to win in match of " + team_name + " (" + str(
+        print("Predicting " + current_winner + " to win in match of " + team_name + " (" + str(
             team_score) + ") vs " + opponent_name + " (" + str(opponent_score) + ")")
     return current_winner
 

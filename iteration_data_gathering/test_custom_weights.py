@@ -1,9 +1,36 @@
 from model import mongo_client, all_tests
 from predictor.calculate_winner import calculate_winner
 
-client = mongo_client.MongoClient()
-matches_doc = client.get_matches_document()
-current_weights_doc = client.get_weights_document()
+
+def test_weights(current_weights):
+    client = mongo_client.MongoClient()
+    matches_doc = client.get_matches_document()
+
+    predictions = matches_doc.find({"prediction_correct": {"$exists": True}})
+    test_array = all_tests.get_all_tests()
+
+    correct_count = 0
+    incorrect_count = 0
+    prediction_percentage = 0
+    for item in predictions:
+        winner = calculate_winner(item, test_array, current_weights)
+        if item["prediction_correct"]:
+            if winner == item["prediction"]:
+                correct_count += 1
+            else:
+                incorrect_count += 1
+        else:
+            if winner == item["prediction"]:
+                incorrect_count += 1
+            else:
+                correct_count += 1
+
+    prediction_percentage = (correct_count / (correct_count + incorrect_count)) * 100
+
+    print("Correct: " + str(correct_count))
+    print("Incorrect: " + str(incorrect_count))
+    print("Percentage: " + str(prediction_percentage))
+
 
 weights = {
     "head_to_head_weight": 1,
@@ -29,29 +56,5 @@ weights = {
     "matches_lost_weight": 1
 }
 
-predictions = matches_doc.find({"prediction_correct": {"$exists": True}})
-
 all_tests = all_tests.AllTests()
-test_array = all_tests.get_all_tests()
-
-correct_count = 0
-incorrect_count = 0
-prediction_percentage = 0
-for item in predictions:
-    winner = calculate_winner(item, test_array, weights)
-    if item["prediction_correct"]:
-        if winner == item["prediction"]:
-            correct_count += 1
-        else:
-            incorrect_count += 1
-    else:
-        if winner == item["prediction"]:
-            incorrect_count += 1
-        else:
-            correct_count += 1
-
-prediction_percentage = (correct_count / (correct_count + incorrect_count)) * 100
-
-print("Correct: " + str(correct_count))
-print("Incorrect: " + str(incorrect_count))
-print("Percentage: " + str(prediction_percentage))
+test_weights(weights)

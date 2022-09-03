@@ -6,3 +6,6 @@ class Team:
         self.match_history = []
         self.player_ratings = []
 
+    def get_maps(self):
+        return self.maps
+

@@ -20,6 +20,7 @@ for match in no_results:
 
     result_box = soup.find("div", class_="standard-box teamsBox")
     if result_box is None:
+        print("Result not yet ready for match " + match["team"]["name"] + " vs " + match["opponent"]["name"])
         continue
     team_scores = result_box.find_all("div", class_="team")
 
@@ -43,6 +44,7 @@ for match in no_results:
     prediction_correct = False
 
     if "team_score" not in updated_match:
+        print("Result not yet ready for match " + match["team"]["name"] + " vs " + match["opponent"]["name"])
         continue
 
     if updated_match["team_score"] > updated_match["opponent_score"]:
@@ -52,7 +54,7 @@ for match in no_results:
         if updated_match["prediction"] != updated_match["team"]["name"]:
             prediction_correct = True
 
-    print("adding prediction result " + str(prediction_correct) + " for match " + updated_match["team"]["name"] + " vs " + updated_match["opponent"]["name"])
+    print("Adding prediction result " + str(prediction_correct) + " for match " + updated_match["team"]["name"] + " vs " + updated_match["opponent"]["name"])
     matches_doc.update_one({"_id": updated_match["_id"]},
                            {"$set": {"prediction_correct": prediction_correct, "result_assessed": False}})
 

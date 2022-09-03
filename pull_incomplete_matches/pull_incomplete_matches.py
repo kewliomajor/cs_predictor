@@ -16,7 +16,7 @@ def to_dict(obj):
     return json.loads(json.dumps(obj, default=lambda o: o.__dict__))
 
 
-print_only = True
+print_only = False
 client = mongo_client.MongoClient()
 matches_doc = client.get_matches_document()
 
@@ -47,6 +47,7 @@ for url in match_urls:
     time.sleep(1)
     page = requests.get(url)
     match_page = BeautifulSoup(page.content, "html.parser")
+    print("Pulling data for match " + url)
     match_object = match_processor.process_match(match_page)
     match_object.url = url
 

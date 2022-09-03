@@ -194,7 +194,33 @@ def process_player_ratings(player_stats, match_object):
 
 
 def process_map_details(map_details, match_object):
-    print(map_details)
-    exit()
+    team_num = 0
+    for table in map_details:
+        tbody = table.find('tbody')
+        rows = tbody.find_all('tr')
+        for row in rows:
+            map_name = row.find("div", class_="mapname").string
+            average_rounds = row.find_all("td", class_="analytics-handicap-map-data-avg")
+            avg_rliw = average_rounds[0].string
+            avg_rwil = average_rounds[1].string
+
+            if avg_rliw == '-':
+                avg_rliw = 14
+            if avg_rwil == '-':
+                avg_rwil = 0
+
+            if team_num == 0:
+                current_team = match_object.team
+            elif team_num == 1:
+                current_team = match_object.opponent
+            else:
+                raise Exception("More than 2 teams playing in analytics center")
+
+            for current_map in current_team.get_maps():
+                if current_map.get_name() != map_name:
+                    continue
+                current_map.set_rounds_lost_in_wins(float(avg_rliw))
+                current_map.set_rounds_won_in_losses(float(avg_rwil))
+        team_num += 1
         
 

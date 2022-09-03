@@ -1,8 +1,11 @@
 from model import map_class, match_class, match_history_class, team_class
 import re
+import requests
+from bs4 import BeautifulSoup
 
 RANK_INDEX = 1
 MAP_PERCENTAGE_INDEX = 0
+base_url = "https://www.hltv.org"
 
 
 def process_match(match_page):
@@ -10,6 +13,7 @@ def process_match(match_page):
     map_wins = match_page.find("div", class_="map-stats-infobox")
     match_history = match_page.find("div", class_="past-matches")
     head_to_head = match_page.find("div", class_="head-to-head")
+    analytics = match_page.find("div", class_="matchpage-analytics-section")
 
     match_object = match_class.Match(team_class.Team(), team_class.Team(), 0, 0, 0)
 
@@ -20,6 +24,8 @@ def process_match(match_page):
         process_match_history(match_history, match_object)
     if head_to_head is not None:
         process_head_to_head(head_to_head, match_object)
+    if analytics is not None:
+        process_analytics(analytics, match_object)
 
     return match_object
 
@@ -146,5 +152,49 @@ def process_head_to_head(head_to_head, match_object):
     match_object.team_wins = team_wins
     match_object.overtimes = overtimes
     match_object.opponent_wins = opponent_wins
+
+
+def process_analytics(analytics, match_object):
+    analytics_link = analytics.find("a", class_="matchpage-analytics-center-container")["href"]
+
+    page = requests.get(base_url + analytics_link)
+    analytics_page = BeautifulSoup(page.content, "html.parser")
+    player_stats = analytics_page.find_all("div", class_="analytics-player-container")
+    map_details = analytics_page.find_all("div", class_="analytics-handicap-map-data-bottom")
+
+    process_player_ratings(player_stats, match_object)
+    process_map_details(map_details, match_object)
+
+
+def process_player_ratings(player_stats, match_object):
+    team_num = 0
+    team_player_ratings = []
+    opponent_player_ratings = []
+    for team in player_stats:
+        player_rating = team.find_all("td", class_="table-3-months")
+        for player in player_rating:
+            if team_num == 0:
+                team_player_ratings.append(float(player.string))
+            elif team_num == 1:
+                opponent_player_ratings.append(float(player.string))
+            else:
+                raise Exception("More than 2 teams playing in analytics center")
+        team_num += 1
+
+    if len(team_player_ratings) < 5:
+        for i in range(5 - len(team_player_ratings)):
+            team_player_ratings.append(0.0)
+
+    if len(opponent_player_ratings) < 5:
+        for i in range(5 - len(opponent_player_ratings)):
+            opponent_player_ratings.append(0.0)
+
+    match_object.team.player_ratings = team_player_ratings
+    match_object.opponent.player_ratings = opponent_player_ratings
+
+
+def process_map_details(map_details, match_object):
+    print(map_details)
+    exit()
         
 

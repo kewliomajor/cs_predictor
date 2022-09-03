@@ -4,4 +4,5 @@ class Team:
         self.ranking = 0
         self.maps = []
         self.match_history = []
+        self.player_ratings = []
 

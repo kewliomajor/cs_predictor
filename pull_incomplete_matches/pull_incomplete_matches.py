@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 from model import mongo_client
 import json
 from json import JSONEncoder
+import time
 
 
 class CsEncoder(JSONEncoder):
@@ -15,6 +16,7 @@ def to_dict(obj):
     return json.loads(json.dumps(obj, default=lambda o: o.__dict__))
 
 
+print_only = True
 client = mongo_client.MongoClient()
 matches_doc = client.get_matches_document()
 
@@ -40,6 +42,9 @@ for url in match_urls:
     existing = matches_doc.find_one({"url": url})
     if existing is not None:
         continue
+
+    # avoid rate limiting
+    time.sleep(1)
     page = requests.get(url)
     match_page = BeautifulSoup(page.content, "html.parser")
     match_object = match_processor.process_match(match_page)
@@ -49,4 +54,7 @@ for url in match_urls:
         print("Match is missing 1 or more participants: " + url)
         continue
     print("Adding match " + match_object.team.name + " vs " + match_object.opponent.name)
-    matches_doc.insert_one(to_dict(match_object))
+    if print_only:
+        print(to_dict(match_object))
+    else:
+        matches_doc.insert_one(to_dict(match_object))

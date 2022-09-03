@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 from model import mongo_client
+import time
 
 
 client = mongo_client.MongoClient()
@@ -11,6 +12,9 @@ no_results = matches_doc.find({"prediction_correct": None})
 
 for match in no_results:
     match_url = match["url"]
+
+    # avoid rate limiting
+    time.sleep(1)
     page = requests.get(match_url)
     soup = BeautifulSoup(page.content, "html.parser")
 

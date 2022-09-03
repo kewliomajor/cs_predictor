@@ -1,4 +1,5 @@
 from model.unrecognized_map import UnrecognizedMapException
+from model.iterative_weights_class import IterativeWeights
 
 
 class BaseTest:
@@ -21,6 +22,8 @@ class BaseTest:
         raise UnrecognizedMapException(string)
 
     def get_weight(self, current_weights):
+        if isinstance(current_weights, IterativeWeights):
+            return getattr(current_weights, self.weight_name)
         if self.weight_name in current_weights:
             return current_weights[self.weight_name]
         else:

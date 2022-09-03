@@ -31,6 +31,9 @@ class Weights:
         weight_name = test.get_weight_name()
         setattr(self, weight_name, self.get_limited_weight(weight))
 
+    def set_weight_by_name(self, name, weight):
+        setattr(self, name, self.get_limited_weight(weight))
+
     @staticmethod
     def get_limited_weight(weight):
         if weight > 100:

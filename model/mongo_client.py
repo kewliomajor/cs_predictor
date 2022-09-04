@@ -16,12 +16,12 @@ class MongoClient:
 
     def get_predictor_accuracy_document(self):
         predictor_db = self.client["metadata"]
-        return predictor_db["predictor_accuracy"]
+        return predictor_db["predictor_accuracy_v2"]
 
     def get_deep_analysis_document(self):
         predictor_db = self.client["metadata"]
-        return predictor_db["deep_analysis"]
+        return predictor_db["deep_analysis_v2"]
 
     def get_trial_weights_document(self):
         predictor_db = self.client["metadata"]
-        return predictor_db["trial_weights"]
+        return predictor_db["trial_weights_v2"]

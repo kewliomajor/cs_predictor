@@ -1,6 +1,6 @@
 import json
 from iteration_data_gathering.individual_deep_dive import rank_difference_performance, head_to_head_performance, maps_won_performance, matches_won_performance, match_percentage_performance
-from iteration_data_gathering.individual_deep_dive import matches_lost_performance, maps_lost_performance
+from iteration_data_gathering.individual_deep_dive import matches_played_performance, maps_played_performance
 from model import mongo_client, all_tests
 from bson.objectid import ObjectId
 
@@ -20,6 +20,10 @@ predictions_count = matches_doc.count_documents(query)
 
 all_tests = all_tests.AllTests()
 test_array = all_tests.get_all_tests()
+
+if predictor_accuracy_doc.find_one() is None:
+    predictor_accuracy_doc.insert_one({"predictors": []})
+    exit()
 
 tests_and_predictors = []
 
@@ -53,7 +57,7 @@ element = {"predictors": tests_and_predictors}
 print("Matches analyzed: " + str(predictions_count))
 print(to_dict(element))
 if not print_only:
-    predictor_accuracy_doc.update_one({"_id": ObjectId("62ff9029f693bf31806a6136")}, {"$set": {"predictors": tests_and_predictors}})
+    predictor_accuracy_doc.update_one({"_id": ObjectId("6314ee8f7c5f64bd9d8adbd3")}, {"$set": {"predictors": tests_and_predictors}})
 
 # run the deep dive analysis
 rank_difference_performance.run()
@@ -61,7 +65,7 @@ head_to_head_performance.run()
 maps_won_performance.run()
 matches_won_performance.run()
 match_percentage_performance.run()
-matches_lost_performance.run()
-maps_lost_performance.run()
+matches_played_performance.run()
+maps_played_performance.run()
 
 

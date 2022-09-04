@@ -173,10 +173,14 @@ def process_player_ratings(player_stats, match_object):
     for team in player_stats:
         player_rating = team.find_all("td", class_="table-3-months")
         for player in player_rating:
+            if player.string == '-':
+                player_rating = 0.0
+            else:
+                player_rating = player.string
             if team_num == 0:
-                team_player_ratings.append(float(player.string))
+                team_player_ratings.append(float(player_rating))
             elif team_num == 1:
-                opponent_player_ratings.append(float(player.string))
+                opponent_player_ratings.append(float(player_rating))
             else:
                 raise Exception("More than 2 teams playing in analytics center")
         team_num += 1

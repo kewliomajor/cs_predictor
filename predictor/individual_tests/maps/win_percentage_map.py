@@ -8,5 +8,5 @@ class WinPercentageMap(Map):
     def calculate_winner(self, match):
         return self.calculate_winner_win_percentage(match)
 
-    def get_base_score(self, match):
-        return self.get_base_score_win_percentage(match)
+    def get_base_score(self, current_team):
+        return self.get_base_score_win_percentage(current_team)

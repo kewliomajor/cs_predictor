@@ -1,21 +1,34 @@
 import pymongo
 from model import mongo_client, all_tests
+from predictor.individual_tests.head_to_head import HeadToHead
+from predictor.individual_tests.history import History
 
 print_only = False
 
 
 def get_score(current_test, entity_name, current_match, current_weights):
-    test_winner = current_test.calculate_winner(current_match)
-    test_score = current_test.get_base_score(current_match)
+    team = False
+    if entity_name == current_match["team"]["name"]:
+        current_team = current_match["team"]
+        team = True
+    elif entity_name == current_match["opponent"]["name"]:
+        current_team = current_match["opponent"]
+    else:
+        raise Exception("Team " + entity_name + " is not in match " + current_match["_id"])
+
+    if isinstance(current_test, HeadToHead):
+        test_score = current_test.get_base_score(current_match, team)
+    elif isinstance(current_test, History):
+        current_test.populate_stats(current_match)
+        test_score = current_test.get_base_score(current_team, team)
+    else:
+        test_score = current_test.get_base_score(current_team)
     test_weight = current_test.get_weight(current_weights)
 
     if test_weight is None:
         return 0
 
-    if test_winner == entity_name:
-        return test_score * test_weight
-    else:
-        return 0
+    return test_score * test_weight
 
 
 def calculate_winner(current_match, test_list, current_weights, print_winner=False):

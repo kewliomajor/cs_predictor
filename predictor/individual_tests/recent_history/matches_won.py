@@ -13,6 +13,8 @@ class MatchesWon(History):
         else:
             return match["opponent"]["name"]
 
-    def get_base_score(self, match):
-        super().populate_stats(match)
-        return abs(self.team_matches_won - self.opponent_matches_won)
+    def get_base_score(self, current_team, team=False):
+        if team:
+            return self.team_matches_won
+        else:
+            return self.opponent_matches_won

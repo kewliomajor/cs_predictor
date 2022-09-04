@@ -13,6 +13,8 @@ class MatchesWinPercentage(History):
         else:
             return match["opponent"]["name"]
 
-    def get_base_score(self, match):
-        super().populate_stats(match)
-        return abs(self.team_win_percentage - self.opponent_win_percentage)
+    def get_base_score(self, current_team, team=False):
+        if team:
+            return self.team_win_percentage
+        else:
+            return self.opponent_win_percentage

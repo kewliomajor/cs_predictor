@@ -1,3 +1,3 @@
 from base_plot import plot
 
-plot("matches_lost")
+plot("maps_played")

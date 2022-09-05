@@ -23,4 +23,5 @@ class AveragePlayer(BaseTest):
                 trimmed_list.append(rating)
         if len(trimmed_list) == 0:
             return 0
-        return sum(trimmed_list) / len(trimmed_list)
+        average = sum(trimmed_list) / len(trimmed_list)
+        return average

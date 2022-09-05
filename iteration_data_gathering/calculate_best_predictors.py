@@ -1,6 +1,9 @@
 import json
-from iteration_data_gathering.individual_deep_dive import rank_difference_performance, head_to_head_performance, maps_won_performance, matches_won_performance, match_percentage_performance
-from iteration_data_gathering.individual_deep_dive import matches_played_performance, maps_played_performance
+from iteration_data_gathering.individual_deep_dive import rank_difference_performance, head_to_head_performance
+from iteration_data_gathering.individual_deep_dive.history import matches_played_performance, matches_won_performance, \
+    match_percentage_performance, maps_played_performance, maps_won_performance
+from iteration_data_gathering.individual_deep_dive.players import average_player_performance, highest_player_performance, \
+    lowest_player_performance
 from model import mongo_client, all_tests
 from bson.objectid import ObjectId
 
@@ -62,10 +65,17 @@ if not print_only:
 # run the deep dive analysis
 rank_difference_performance.run()
 head_to_head_performance.run()
+
+# history
 maps_won_performance.run()
 matches_won_performance.run()
 match_percentage_performance.run()
 matches_played_performance.run()
 maps_played_performance.run()
+
+# players
+average_player_performance.run()
+highest_player_performance.run()
+lowest_player_performance.run()
 
 

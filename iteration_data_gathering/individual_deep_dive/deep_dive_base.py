@@ -24,9 +24,9 @@ def add_to_total(match, final_array, test, current_team):
         test.populate_stats(match)
         test_score = test.get_base_score(current_team, team)
     else:
-        test_score = int(test.get_base_score(current_team))
+        test_score = float(test.get_base_score(current_team))
 
-    test_score = round(test_score, 1)
+    test_score = round(test_score, 2)
 
     if test_score not in final_array:
         final_array[test_score] = {"total": 0, "correct": 0, "percentage": 0}

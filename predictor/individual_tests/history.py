@@ -17,10 +17,24 @@ class History(BaseTest):
         self.opponent_win_percentage = 0
         self.previous_match = None
 
+    def clear_stats(self):
+        self.team_maps_won = 0
+        self.opponent_maps_won = 0
+        self.team_maps_played = 0
+        self.opponent_maps_played = 0
+        self.team_matches_won = 0
+        self.opponent_matches_won = 0
+        self.team_matches_played = 0
+        self.opponent_matches_played = 0
+        self.team_win_percentage = 0
+        self.opponent_win_percentage = 0
+
     def populate_stats(self, match):
         if self.previous_match is not None:
             if self.previous_match["_id"] == match["_id"]:
                 return
+
+        self.clear_stats()
 
         for past_match in match["team"]["match_history"]:
             if past_match["max_maps"] == 1:

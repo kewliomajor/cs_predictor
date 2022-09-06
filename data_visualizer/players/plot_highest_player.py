@@ -1,3 +1,3 @@
-from data_visualizer.base_plot import plot
+from data_visualizer.base_plot import plot_poly
 
-plot("highest_player")
+plot_poly("highest_player")

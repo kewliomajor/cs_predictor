@@ -1,3 +1,3 @@
-from base_plot import plot
+from data_visualizer.base_plot import plot_poly
 
-plot("maps_won")
+plot_poly("maps_won")

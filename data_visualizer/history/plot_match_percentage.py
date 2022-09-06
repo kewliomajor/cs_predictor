@@ -1,3 +1,3 @@
-from base_plot import plot
+from data_visualizer.base_plot import plot_poly
 
-plot("match_win_percentage")
+plot_poly("match_win_percentage")

@@ -1,3 +1,3 @@
-from base_plot import plot
+from base_plot import plot_poly
 
-plot("head_to_head")
+plot_poly("head_to_head")

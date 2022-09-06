@@ -1,3 +1,3 @@
-from base_plot import plot
+from data_visualizer.base_plot import plot_poly
 
-plot("matches_won")
+plot_poly("matches_won")

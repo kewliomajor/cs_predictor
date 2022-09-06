@@ -1,3 +1,3 @@
-from base_plot import plot
+from base_plot import plot_poly
 
-plot("rank_difference")
+plot_poly("rank_difference")

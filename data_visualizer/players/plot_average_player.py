@@ -1,3 +1,3 @@
-from data_visualizer.base_plot import plot
+from data_visualizer.base_plot import plot_poly
 
-plot("average_player")
+plot_poly("average_player")

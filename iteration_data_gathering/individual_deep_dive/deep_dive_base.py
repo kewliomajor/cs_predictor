@@ -76,5 +76,8 @@ def execute(test, test_name):
 
     print("Matches analyzed: " + str(predictions_count))
     print(to_dict(scores_and_predictors))
+
+    data = deep_analysis_doc.find_one()
+
     if not print_only:
-        deep_analysis_doc.update_one({"_id": ObjectId("6314f38c5d090032d472c258")}, {"$set": {test_name: to_dict(scores_and_predictors)}})
+        deep_analysis_doc.update_one({"_id": data["_id"]}, {"$set": {test_name: to_dict(scores_and_predictors)}})

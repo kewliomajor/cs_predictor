@@ -59,8 +59,11 @@ element = {"predictors": tests_and_predictors}
 
 print("Matches analyzed: " + str(predictions_count))
 print(to_dict(element))
+
+data = predictor_accuracy_doc.find_one()
+
 if not print_only:
-    predictor_accuracy_doc.update_one({"_id": ObjectId("6314ee8f7c5f64bd9d8adbd3")}, {"$set": {"predictors": tests_and_predictors}})
+    predictor_accuracy_doc.update_one({"_id": data["_id"]}, {"$set": {"predictors": tests_and_predictors}})
 
 # run the deep dive analysis
 rank_difference_performance.run()

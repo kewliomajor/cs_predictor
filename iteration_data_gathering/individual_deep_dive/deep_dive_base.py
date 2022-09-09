@@ -2,6 +2,7 @@ import json
 from model import mongo_client
 from bson.objectid import ObjectId
 import collections
+from predictor.individual_tests.rank import Rank
 from predictor.individual_tests.head_to_head import HeadToHead
 from predictor.individual_tests.history import History
 
@@ -27,6 +28,10 @@ def add_to_total(match, final_array, test, current_team):
         test_score = float(test.get_base_score(current_team))
 
     test_score = round(test_score, 2)
+
+    if isinstance(test, Rank):
+        if test_score == 0:
+            return final_array
 
     if test_score not in final_array:
         final_array[test_score] = {"total": 0, "correct": 0, "percentage": 0}

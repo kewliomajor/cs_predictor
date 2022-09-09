@@ -1,4 +1,4 @@
-from predictor.individual_tests import head_to_head, rank_difference
+from predictor.individual_tests import head_to_head, rank
 from predictor.individual_tests.maps.num_played import ancient_played, dust2_played, inferno_played, mirage_played, nuke_played, overpass_played, vertigo_played
 from predictor.individual_tests.maps.win_percentage import ancient_won, dust2_won, inferno_won, mirage_won, nuke_won, overpass_won, vertigo_won
 from predictor.individual_tests.maps.rounds_won_in_losses import ancient_rwil, dust2_rwil, inferno_rwil, mirage_rwil, nuke_rwil, overpass_rwil, vertigo_rwil
@@ -13,7 +13,7 @@ class AllTests:
         self.test_array = []
         self.tests_and_weights = []
         self.test_array.append(head_to_head.HeadToHead())
-        self.test_array.append(rank_difference.RankDifference())
+        self.test_array.append(rank.Rank())
 
         self.test_array.append(average_player.AveragePlayer())
         self.test_array.append(highest_player.HighestPlayer())

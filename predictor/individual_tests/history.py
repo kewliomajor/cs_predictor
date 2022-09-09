@@ -1,3 +1,5 @@
+from abc import abstractmethod
+
 from predictor.individual_tests.base_test import BaseTest
 
 
@@ -78,3 +80,7 @@ class History(BaseTest):
         else:
             self.opponent_win_percentage = (self.opponent_matches_won / self.opponent_matches_played) * 100
         self.previous_match = match
+
+    @abstractmethod
+    def get_base_score(self, current_team, team=False):
+        pass

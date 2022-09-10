@@ -8,6 +8,7 @@ from predictor.individual_tests.history import History
 from predictor.individual_tests.players.highest_player import HighestPlayer
 from predictor.individual_tests.players.average_player import AveragePlayer
 from predictor.individual_tests.players.lowest_player import LowestPlayer
+from predictor.individual_tests.maps.rounds_won_in_losses_map import RoundsWonInLossesMap
 
 
 def to_dict(obj):
@@ -25,6 +26,9 @@ def ignore_score(test, test_score):
         if test_score == 0:
             return True
     elif isinstance(test, LowestPlayer):
+        if test_score == 0:
+            return True
+    elif isinstance(test, RoundsWonInLossesMap):
         if test_score == 0:
             return True
 

@@ -1,11 +1,14 @@
 import json
-from iteration_data_gathering.individual_deep_dive import rank_difference_performance, head_to_head_performance
+from iteration_data_gathering.individual_deep_dive import rank_performance, head_to_head_performance, \
+    rank_difference_performance
 from iteration_data_gathering.individual_deep_dive.history import matches_played_performance, matches_won_performance, \
     match_percentage_performance, maps_played_performance, maps_won_performance
-from iteration_data_gathering.individual_deep_dive.players import average_player_performance, highest_player_performance, \
-    lowest_player_performance
+from iteration_data_gathering.individual_deep_dive.players import average_player_performance, \
+    highest_player_performance, lowest_player_performance
+from iteration_data_gathering.individual_deep_dive.maps.num_played import ancient_played_performance, \
+    dust2_played_performance, inferno_played_performance, mirage_played_performance, nuke_played_performance, \
+    overpass_played_performance, vertigo_played_performance
 from model import mongo_client, all_tests
-from bson.objectid import ObjectId
 
 
 def to_dict(obj):
@@ -66,8 +69,9 @@ if not print_only:
     predictor_accuracy_doc.update_one({"_id": data["_id"]}, {"$set": {"predictors": tests_and_predictors}})
 
 # run the deep dive analysis
-rank_difference_performance.run()
+rank_performance.run()
 head_to_head_performance.run()
+rank_difference_performance.run()
 
 # history
 maps_won_performance.run()
@@ -80,5 +84,14 @@ maps_played_performance.run()
 average_player_performance.run()
 highest_player_performance.run()
 lowest_player_performance.run()
+
+# maps played
+ancient_played_performance.run()
+dust2_played_performance.run()
+inferno_played_performance.run()
+mirage_played_performance.run()
+nuke_played_performance.run()
+overpass_played_performance.run()
+vertigo_played_performance.run()
 
 

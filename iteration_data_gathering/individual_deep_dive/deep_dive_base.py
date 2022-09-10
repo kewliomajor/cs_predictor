@@ -1,37 +1,63 @@
 import json
 from model import mongo_client
-from bson.objectid import ObjectId
 import collections
 from predictor.individual_tests.rank import Rank
+from predictor.individual_tests.rank_difference import RankDifference
 from predictor.individual_tests.head_to_head import HeadToHead
 from predictor.individual_tests.history import History
+from predictor.individual_tests.players.highest_player import HighestPlayer
+from predictor.individual_tests.players.average_player import AveragePlayer
+from predictor.individual_tests.players.lowest_player import LowestPlayer
 
 
 def to_dict(obj):
     return json.loads(json.dumps(obj, default=lambda o: o.__dict__))
 
 
-def add_to_total(match, final_array, test, current_team):
-    predicted_total_winner = match["prediction"]
-    predicted_test_winner = test.calculate_winner(match)
+def ignore_score(test, test_score):
+    if isinstance(test, Rank):
+        if test_score == 0:
+            return True
+    elif isinstance(test, HighestPlayer):
+        if test_score == 0:
+            return True
+    elif isinstance(test, AveragePlayer):
+        if test_score == 0:
+            return True
+    elif isinstance(test, LowestPlayer):
+        if test_score == 0:
+            return True
 
-    team = False
-    if current_team["name"] == match["team"]["name"]:
-        team = True
+    return False
 
+
+def get_test_score(match, test, current_team, team):
     if isinstance(test, HeadToHead):
         test_score = test.get_base_score(match, team)
     elif isinstance(test, History):
         test.populate_stats(match)
         test_score = test.get_base_score(current_team, team)
+    elif isinstance(test, RankDifference):
+        test_score = test.get_base_score(match, team)
     else:
         test_score = float(test.get_base_score(current_team))
 
     test_score = round(test_score, 2)
 
-    if isinstance(test, Rank):
-        if test_score == 0:
-            return final_array
+    return test_score
+
+
+def add_to_total(match, final_array, test, current_team):
+    predicted_total_winner = match["prediction"]
+
+    team = False
+    if current_team["name"] == match["team"]["name"]:
+        team = True
+
+    test_score = get_test_score(match, test, current_team, team)
+
+    if ignore_score(test, test_score):
+        return final_array
 
     if test_score not in final_array:
         final_array[test_score] = {"total": 0, "correct": 0, "percentage": 0}
@@ -39,10 +65,10 @@ def add_to_total(match, final_array, test, current_team):
     final_array[test_score]["total"] += 1
 
     if match["prediction_correct"]:
-        if predicted_test_winner == predicted_total_winner:
+        if current_team["name"] == predicted_total_winner:
             final_array[test_score]["correct"] += 1
     else:
-        if predicted_test_winner != predicted_total_winner:
+        if current_team["name"] != predicted_total_winner:
             final_array[test_score]["correct"] += 1
 
     return final_array

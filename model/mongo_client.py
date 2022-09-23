@@ -18,10 +18,22 @@ class MongoClient:
         predictor_db = self.client["metadata"]
         return predictor_db["predictor_accuracy_v2"]
 
+    def get_predictor_accuracy_ranked_document(self):
+        predictor_db = self.client["metadata"]
+        return predictor_db["predictor_accuracy_ranked_only"]
+
     def get_deep_analysis_document(self):
         predictor_db = self.client["metadata"]
         return predictor_db["deep_analysis_v2"]
 
+    def get_deep_analysis_ranked_document(self):
+        predictor_db = self.client["metadata"]
+        return predictor_db["deep_analysis_ranked_only"]
+
     def get_trial_weights_document(self):
         predictor_db = self.client["metadata"]
         return predictor_db["trial_weights_v2"]
+
+    def get_trial_weights_ranked_document(self):
+        predictor_db = self.client["metadata"]
+        return predictor_db["trial_weights_ranked_only"]

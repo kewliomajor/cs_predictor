@@ -9,6 +9,10 @@ def objective(x, a, b, c):
     return a * x + b * x ** 2 + c
 
 
+def objective_5d(x, a, b, c, d, e, f):
+    return (a * x) + (b * x**2) + (c * x**3) + (d * x**4) + (e * x**5) + f
+
+
 def plot_regression(ax, reg_x, reg_y, base_x):
     values = np.polyfit(reg_x, reg_y, 1)
     trend = np.poly1d(values)
@@ -21,6 +25,14 @@ def plot_2d_poly_regression(ax, reg_x, reg_y, base_x):
     x_line = arange(min(base_x), max(base_x), 0.01)
     y_line = objective(x_line, a, b, c)
     ax.plot(x_line, y_line, '--', color='red', label='2nd Degree Poly')
+
+
+def plot_5d_poly_regression(ax, reg_x, reg_y, base_x):
+    popt, _ = curve_fit(objective_5d, reg_x, reg_y)
+    a, b, c, d, e, f = popt
+    x_line = arange(min(base_x), max(base_x), 0.01)
+    y_line = objective_5d(x_line, a, b, c, d, e, f)
+    ax.plot(x_line, y_line, '--', color='orange', label='5th Degree Poly')
 
 
 def label_plot(ax):
@@ -97,6 +109,7 @@ def plot_poly(item_name):
 
     plot_regression(ax, regression_x, regression_y, x)
     plot_2d_poly_regression(ax, regression_x, regression_y, x)
+    plot_5d_poly_regression(ax, regression_x, regression_y, x)
 
     label_plot(ax)
     annotate_plot(x, y)

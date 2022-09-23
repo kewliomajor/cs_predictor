@@ -31,6 +31,12 @@ def ignore_score(test, test_score):
     elif isinstance(test, RoundsWonInLossesMap):
         if test_score == 0:
             return True
+    elif isinstance(test, RankDifference):
+        if test_score < 0:
+            return True
+    elif isinstance(test, HeadToHead):
+        if test_score == 0:
+            return True
 
     return False
 

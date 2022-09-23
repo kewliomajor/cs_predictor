@@ -35,10 +35,20 @@ def test_weights(current_weights, output=False):
     return prediction_percentage
 
 
+def get_total_game_count():
+    client = mongo_client.MongoClient()
+    matches_doc = client.get_matches_document()
+
+    return matches_doc.count_documents({"prediction_correct": {"$exists": True}})
+
+
 def get_base_weights():
     return {
         "head_to_head_weight": 1,
         "rank_difference_weight": 1,
+        "average_player_weight": 1,
+        "highest_player_weight": 1,
+        "lowest_player_weight": 1,
         "ancient_played_weight": 1,
         "dust2_played_weight": 1,
         "inferno_played_weight": 1,
@@ -53,11 +63,25 @@ def get_base_weights():
         "nuke_won_weight": 1,
         "overpass_won_weight": 1,
         "vertigo_won_weight": 1,
+        "ancient_rliw_weight": 1,
+        "dust2_rliw_weight": 1,
+        "inferno_rliw_weight": 1,
+        "mirage_rliw_weight": 1,
+        "nuke_rliw_weight": 1,
+        "overpass_rliw_weight": 1,
+        "vertigo_rliw_weight": 1,
+        "ancient_rwil_weight": 1,
+        "dust2_rwil_weight": 1,
+        "inferno_rwil_weight": 1,
+        "mirage_rwil_weight": 1,
+        "nuke_rwil_weight": 1,
+        "overpass_rwil_weight": 1,
+        "vertigo_rwil_weight": 1,
         "maps_won_weight": 1,
-        "maps_lost_weight": 1,
+        "maps_played_weight": 1,
         "matches_win_percentage_weight": 1,
         "matches_won_weight": 1,
-        "matches_lost_weight": 1
+        "matches_played_weight": 1
     }
 
 

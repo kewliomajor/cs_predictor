@@ -8,6 +8,7 @@ class IterativeWeights(Weights):
         super().__init__()
         self.iterative_tests = 0
         self.prediction_percentage = 0.0
+        self.test_games = 0
 
     def set_weights_from_object(self, weight_object):
         for key in weight_object.keys():
@@ -35,3 +36,6 @@ class IterativeWeights(Weights):
 
     def add_iterative_tests(self, tests_ran):
         self.iterative_tests += tests_ran
+
+    def set_test_games(self, num_games):
+        self.test_games = num_games

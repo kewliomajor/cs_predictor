@@ -79,7 +79,10 @@ def annotate_plot(x, y):
 
 def plot_poly(item_name):
     client = mongo_client.MongoClient()
-    deep_analysis_doc = client.get_deep_analysis_document()
+
+    # change deep analysis doc to get graphs of different data sets (for example ranked only)
+    deep_analysis_doc = client.get_deep_analysis_ranked_document()
+    # deep_analysis_doc = client.get_deep_analysis_document()
 
     deep_analysis = deep_analysis_doc.find_one({})
 

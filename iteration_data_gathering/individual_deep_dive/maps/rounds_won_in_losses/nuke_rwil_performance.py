@@ -5,5 +5,5 @@ from iteration_data_gathering.individual_deep_dive.deep_dive_base import execute
 nuke_rwil = nuke_rwil.NukeRoundsWonInLosses()
 
 
-def run():
-    execute(nuke_rwil, "nuke_rwil")
+def run(deep_analysis_doc, query):
+    execute(nuke_rwil, "nuke_rwil", deep_analysis_doc, query)

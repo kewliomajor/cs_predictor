@@ -5,5 +5,5 @@ from iteration_data_gathering.individual_deep_dive.deep_dive_base import execute
 ancient_rwil = ancient_rwil.AncientRoundsWonInLosses()
 
 
-def run():
-    execute(ancient_rwil, "ancient_rwil")
+def run(deep_analysis_doc, query):
+    execute(ancient_rwil, "ancient_rwil", deep_analysis_doc, query)

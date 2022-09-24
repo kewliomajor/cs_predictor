@@ -5,5 +5,5 @@ from iteration_data_gathering.individual_deep_dive.deep_dive_base import execute
 matches_won = matches_won.MatchesWon()
 
 
-def run():
-    execute(matches_won, "matches_won")
+def run(deep_analysis_doc, query):
+    execute(matches_won, "matches_won", deep_analysis_doc, query)

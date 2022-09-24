@@ -5,5 +5,5 @@ from iteration_data_gathering.individual_deep_dive.deep_dive_base import execute
 nuke_played = nuke_played.NukePlayed()
 
 
-def run():
-    execute(nuke_played, "nuke_played")
+def run(deep_analysis_doc, query):
+    execute(nuke_played, "nuke_played", deep_analysis_doc, query)

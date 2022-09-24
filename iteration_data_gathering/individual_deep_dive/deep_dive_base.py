@@ -84,17 +84,15 @@ def add_to_total(match, final_array, test, current_team):
     return final_array
 
 
-def execute(test, test_name):
+def execute(test, test_name, deep_analysis_doc, query):
     print_only = False
     client = mongo_client.MongoClient()
     matches_doc = client.get_matches_document()
-    deep_analysis_doc = client.get_deep_analysis_document()
 
     if deep_analysis_doc.find_one() is None:
         deep_analysis_doc.insert_one({})
         exit()
 
-    query = {"prediction_correct": {"$exists": True}}
     predictions = matches_doc.find(query)
     predictions_count = matches_doc.count_documents(query)
 

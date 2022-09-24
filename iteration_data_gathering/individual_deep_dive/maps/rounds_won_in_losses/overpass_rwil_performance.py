@@ -5,5 +5,5 @@ from iteration_data_gathering.individual_deep_dive.deep_dive_base import execute
 overpass_rwil = overpass_rwil.OverpassRoundsWonInLosses()
 
 
-def run():
-    execute(overpass_rwil, "overpass_rwil")
+def run(deep_analysis_doc, query):
+    execute(overpass_rwil, "overpass_rwil", deep_analysis_doc, query)

@@ -5,5 +5,5 @@ from iteration_data_gathering.individual_deep_dive.deep_dive_base import execute
 mirage_rwil = mirage_rwil.MirageRoundsWonInLosses()
 
 
-def run():
-    execute(mirage_rwil, "mirage_rwil")
+def run(deep_analysis_doc, query):
+    execute(mirage_rwil, "mirage_rwil", deep_analysis_doc, query)

@@ -5,5 +5,5 @@ from iteration_data_gathering.individual_deep_dive.deep_dive_base import execute
 dust2_rliw = dust2_rliw.Dust2RoundsLostInWins()
 
 
-def run():
-    execute(dust2_rliw, "dust2_rliw")
+def run(deep_analysis_doc, query):
+    execute(dust2_rliw, "dust2_rliw", deep_analysis_doc, query)

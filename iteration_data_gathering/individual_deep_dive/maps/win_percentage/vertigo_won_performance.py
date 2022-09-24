@@ -5,5 +5,5 @@ from iteration_data_gathering.individual_deep_dive.deep_dive_base import execute
 vertigo_won = vertigo_won.VertigoWon()
 
 
-def run():
-    execute(vertigo_won, "vertigo_won")
+def run(deep_analysis_doc, query):
+    execute(vertigo_won, "vertigo_won", deep_analysis_doc, query)

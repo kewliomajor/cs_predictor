@@ -5,5 +5,5 @@ from iteration_data_gathering.individual_deep_dive.deep_dive_base import execute
 inferno_played = inferno_played.InfernoPlayed()
 
 
-def run():
-    execute(inferno_played, "inferno_played")
+def run(deep_analysis_doc, query):
+    execute(inferno_played, "inferno_played", deep_analysis_doc, query)

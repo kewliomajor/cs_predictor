@@ -5,5 +5,5 @@ from iteration_data_gathering.individual_deep_dive.deep_dive_base import execute
 rank = rank.Rank()
 
 
-def run():
-    execute(rank, "rank")
+def run(deep_analysis_doc, query):
+    execute(rank, "rank", deep_analysis_doc, query)

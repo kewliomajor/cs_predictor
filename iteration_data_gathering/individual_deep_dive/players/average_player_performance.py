@@ -5,5 +5,5 @@ from iteration_data_gathering.individual_deep_dive.deep_dive_base import execute
 average_player = average_player.AveragePlayer()
 
 
-def run():
-    execute(average_player, "average_player")
+def run(deep_analysis_doc, query):
+    execute(average_player, "average_player", deep_analysis_doc, query)

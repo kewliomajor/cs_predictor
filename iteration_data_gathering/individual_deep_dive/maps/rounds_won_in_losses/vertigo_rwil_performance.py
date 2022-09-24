@@ -5,5 +5,5 @@ from iteration_data_gathering.individual_deep_dive.deep_dive_base import execute
 vertigo_rwil = vertigo_rwil.VertigoRoundsWonInLosses()
 
 
-def run():
-    execute(vertigo_rwil, "vertigo_rwil")
+def run(deep_analysis_doc, query):
+    execute(vertigo_rwil, "vertigo_rwil", deep_analysis_doc, query)

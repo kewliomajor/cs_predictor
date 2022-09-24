@@ -5,5 +5,5 @@ from iteration_data_gathering.individual_deep_dive.deep_dive_base import execute
 mirage_played = mirage_played.MiragePlayed()
 
 
-def run():
-    execute(mirage_played, "mirage_played")
+def run(deep_analysis_doc, query):
+    execute(mirage_played, "mirage_played", deep_analysis_doc, query)

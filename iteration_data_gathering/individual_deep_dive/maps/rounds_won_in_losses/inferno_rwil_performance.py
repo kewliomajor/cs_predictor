@@ -5,5 +5,5 @@ from iteration_data_gathering.individual_deep_dive.deep_dive_base import execute
 inferno_rwil = inferno_rwil.InfernoRoundsWonInLosses()
 
 
-def run():
-    execute(inferno_rwil, "inferno_rwil")
+def run(deep_analysis_doc, query):
+    execute(inferno_rwil, "inferno_rwil", deep_analysis_doc, query)

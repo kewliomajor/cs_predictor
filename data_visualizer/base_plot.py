@@ -81,6 +81,8 @@ def plot_poly(item_name):
     client = mongo_client.MongoClient()
 
     # change deep analysis doc to get graphs of different data sets (for example ranked only)
+    # deep_analysis_doc = client.get_deep_analysis_top_50_document()
+    # deep_analysis_doc = client.get_deep_analysis_top_30_document()
     deep_analysis_doc = client.get_deep_analysis_ranked_document()
     # deep_analysis_doc = client.get_deep_analysis_document()
 

@@ -8,6 +8,9 @@ class IterativeWeights(Weights):
         super().__init__()
         self.iterative_tests = 0
         self.prediction_percentage = 0.0
+        self.ranked_prediction_percentage = 0.0
+        self.top_50_prediction_percentage = 0.0
+        self.top_30_prediction_percentage = 0.0
         self.test_games = 0
 
     def set_weights_from_object(self, weight_object):
@@ -33,6 +36,12 @@ class IterativeWeights(Weights):
 
     def set_prediction_percentage(self, percentage):
         self.prediction_percentage = percentage
+
+    def set_prediction_percentage_from_object(self, item):
+        self.prediction_percentage = item["prediction_percentage"]
+        self.ranked_prediction_percentage = item["ranked_prediction_percentage"]
+        self.top_50_prediction_percentage = item["top_50_prediction_percentage"]
+        self.top_30_prediction_percentage = item["top_30_prediction_percentage"]
 
     def add_iterative_tests(self, tests_ran):
         self.iterative_tests += tests_ran

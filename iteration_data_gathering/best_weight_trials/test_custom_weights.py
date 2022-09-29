@@ -9,30 +9,86 @@ def test_weights(current_weights, output=False):
     predictions = matches_doc.find({"prediction_correct": {"$exists": True}})
     test_array = all_tests.get_all_tests()
 
-    correct_count = 0
-    incorrect_count = 0
-    prediction_percentage = 0
+    results = {
+        "correct_count": 0,
+        "incorrect_count": 0,
+        "prediction_percentage": 0,
+        "ranked_correct_count": 0,
+        "ranked_incorrect_count": 0,
+        "ranked_prediction_percentage": 0,
+        "top_50_correct_count": 0,
+        "top_50_incorrect_count": 0,
+        "top_50_prediction_percentage": 0,
+        "top_30_correct_count": 0,
+        "top_30_incorrect_count": 0,
+        "top_30_prediction_percentage": 0,
+    }
     for item in predictions:
         winner = calculate_winner(item, test_array, current_weights)
+        ranked = False
+        top_50 = False
+        top_30 = False
+
+        if item["team"]["ranking"] < 999 and item["opponent"]["ranking"] < 999:
+            ranked = True
+        if item["team"]["ranking"] <= 50 and item["opponent"]["ranking"] <= 50:
+            top_50 = True
+        if item["team"]["ranking"] <= 30 and item["opponent"]["ranking"] <= 30:
+            top_30 = True
+
         if item["prediction_correct"]:
             if winner == item["prediction"]:
-                correct_count += 1
+                results["correct_count"] += 1
+                if ranked:
+                    results["ranked_correct_count"] += 1
+                if top_50:
+                    results["top_50_correct_count"] += 1
+                if top_30:
+                    results["top_30_correct_count"] += 1
             else:
-                incorrect_count += 1
+                results["incorrect_count"] += 1
+                if ranked:
+                    results["ranked_incorrect_count"] += 1
+                if top_50:
+                    results["top_50_incorrect_count"] += 1
+                if top_30:
+                    results["top_30_incorrect_count"] += 1
         else:
             if winner == item["prediction"]:
-                incorrect_count += 1
+                results["incorrect_count"] += 1
+                if ranked:
+                    results["ranked_incorrect_count"] += 1
+                if top_50:
+                    results["top_50_incorrect_count"] += 1
+                if top_30:
+                    results["top_30_incorrect_count"] += 1
             else:
-                correct_count += 1
+                results["correct_count"] += 1
+                if ranked:
+                    results["ranked_correct_count"] += 1
+                if top_50:
+                    results["top_50_correct_count"] += 1
+                if top_30:
+                    results["top_30_correct_count"] += 1
 
-    prediction_percentage = (correct_count / (correct_count + incorrect_count)) * 100
+    results["prediction_percentage"] = (results["correct_count"] / (
+            results["correct_count"] + results["incorrect_count"])) * 100
+    if results["ranked_correct_count"] + results["ranked_incorrect_count"] > 0:
+        results["ranked_prediction_percentage"] = (results["ranked_correct_count"] / (
+                    results["ranked_correct_count"] + results["ranked_incorrect_count"])) * 100
+    if results["top_50_correct_count"] + results["top_50_incorrect_count"] > 0:
+        results["top_50_prediction_percentage"] = (results["top_50_correct_count"] / (
+                    results["top_50_correct_count"] + results["top_50_incorrect_count"])) * 100
+    if results["top_30_correct_count"] + results["top_30_incorrect_count"] > 0:
+        results["top_30_prediction_percentage"] = (results["top_30_correct_count"] / (
+                    results["top_30_correct_count"] + results["top_30_incorrect_count"])) * 100
 
     if output:
-        print("Correct: " + str(correct_count))
-        print("Incorrect: " + str(incorrect_count))
-        print("Percentage: " + str(prediction_percentage))
+        print("Correct: " + str(results["correct_count"]))
+        print("Incorrect: " + str(results["incorrect_count"]))
+        print("Percentage: " + str(results["prediction_percentage"]))
 
-    return prediction_percentage
+    return results
 
 
 def get_total_game_count():

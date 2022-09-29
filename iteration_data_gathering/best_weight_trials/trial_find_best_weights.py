@@ -28,8 +28,8 @@ for i in range(randomizer_runs):
     random_weight_object.set_weights_from_object(latest_weight)
     random_weight_object.randomize_weights()
     performance = test_weights(random_weight_object)
-    if performance > weight_object.get_prediction_percentage():
-        random_weight_object.set_prediction_percentage(performance)
+    if performance["prediction_percentage"] > weight_object.get_prediction_percentage():
+        random_weight_object.set_prediction_percentage_from_object(performance)
         weight_object = random_weight_object
 
 weight_object.add_iterative_tests(randomizer_runs)

@@ -1,4 +1,5 @@
-from assess_weights_base import assess_weights_performance, get_weight
+from iteration_data_gathering.assess_weights_performance.assess_weights_base import assess_weights_performance,\
+    get_weight
 
 weight = get_weight()
 

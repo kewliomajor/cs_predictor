@@ -1,5 +1,6 @@
 from model import mongo_client, all_tests
-from calculate_predictors_base import update_predictors, update_deep_dives
+from iteration_data_gathering.calculate_best_predictors.calculate_predictors_base import update_predictors,\
+    update_deep_dives
 
 
 client = mongo_client.MongoClient()

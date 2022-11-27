@@ -6,7 +6,13 @@ def test_weights(current_weights, output=False):
     client = mongo_client.MongoClient()
     matches_doc = client.get_matches_document()
 
-    predictions = matches_doc.find({"prediction_correct": {"$exists": True}})
+    query = {"prediction_correct": {"$exists": True},
+             "$and": [
+                 {"team.ranking": {"$lt": 999}},
+                 {"opponent.ranking": {"$lt": 999}}
+             ]}
+
+    predictions = matches_doc.find(query)
     test_array = all_tests.get_all_tests()
 
     results = {
@@ -95,7 +101,13 @@ def get_total_game_count():
     client = mongo_client.MongoClient()
     matches_doc = client.get_matches_document()
 
-    return matches_doc.count_documents({"prediction_correct": {"$exists": True}})
+    query = {"prediction_correct": {"$exists": True},
+             "$and": [
+                 {"team.ranking": {"$lt": 999}},
+                 {"opponent.ranking": {"$lt": 999}}
+             ]}
+
+    return matches_doc.count_documents(query)
 
 
 def get_base_weights():
@@ -106,6 +118,7 @@ def get_base_weights():
         "highest_player_weight": 1,
         "lowest_player_weight": 1,
         "ancient_played_weight": 1,
+        "anubis_played_weight": 1,
         "dust2_played_weight": 1,
         "inferno_played_weight": 1,
         "mirage_played_weight": 1,
@@ -113,6 +126,7 @@ def get_base_weights():
         "overpass_played_weight": 1,
         "vertigo_played_weight": 1,
         "ancient_won_weight": 1,
+        "anubis_won_weight": 1,
         "dust2_won_weight": 1,
         "inferno_won_weight": 1,
         "mirage_won_weight": 1,
@@ -120,6 +134,7 @@ def get_base_weights():
         "overpass_won_weight": 1,
         "vertigo_won_weight": 1,
         "ancient_rliw_weight": 1,
+        "anubis_rliw_weight": 1,
         "dust2_rliw_weight": 1,
         "inferno_rliw_weight": 1,
         "mirage_rliw_weight": 1,
@@ -127,6 +142,7 @@ def get_base_weights():
         "overpass_rliw_weight": 1,
         "vertigo_rliw_weight": 1,
         "ancient_rwil_weight": 1,
+        "anubis_rwil_weight": 1,
         "dust2_rwil_weight": 1,
         "inferno_rwil_weight": 1,
         "mirage_rwil_weight": 1,

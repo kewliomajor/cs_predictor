@@ -34,13 +34,6 @@ for i in range(randomizer_runs):
 
 weight_object.add_iterative_tests(randomizer_runs)
 
-if get_total_game_count() > latest_weight['test_games']:
-    print("Need to start over because we have more games in the pool at " + str(weight_object.get_prediction_percentage()))
-    weight_object.set_iterative_tests(randomizer_runs)
-    weight_object.set_test_games(get_total_game_count())
-    trial_weights_doc.insert_one(to_dict(weight_object))
-    exit()
-
 if weight_object.get_prediction_percentage() > latest_weight['prediction_percentage']:
     weight_object.set_test_games(get_total_game_count())
     print("Updating new weights, prediction percentage increased from " + str(latest_weight['prediction_percentage'])

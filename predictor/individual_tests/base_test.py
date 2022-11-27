@@ -15,7 +15,7 @@ class BaseTest:
                 return map_entity
 
         string = "Map " + map_name + " is not a recognized map in match involving team " + current_team["name"]
-        print(string)
+        # print(string)
         raise UnrecognizedMapException(string)
 
     def get_weight(self, current_weights):

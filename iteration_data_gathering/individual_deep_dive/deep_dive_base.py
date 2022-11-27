@@ -109,6 +109,7 @@ def execute(test, test_name, deep_analysis_doc, query):
         scores_and_predictors[score]["percentage"] = percentage
 
     print("Matches analyzed: " + str(predictions_count))
+    print(test_name)
     print(to_dict(scores_and_predictors))
 
     data = deep_analysis_doc.find_one()

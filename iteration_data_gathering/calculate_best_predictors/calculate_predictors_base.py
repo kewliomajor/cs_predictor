@@ -6,17 +6,17 @@ from iteration_data_gathering.individual_deep_dive.history import matches_played
 from iteration_data_gathering.individual_deep_dive.players import average_player_performance, \
     highest_player_performance, lowest_player_performance
 from iteration_data_gathering.individual_deep_dive.maps.num_played import ancient_played_performance, \
-    dust2_played_performance, inferno_played_performance, mirage_played_performance, nuke_played_performance, \
-    overpass_played_performance, vertigo_played_performance
+    anubis_played_performance, dust2_played_performance, inferno_played_performance, mirage_played_performance, \
+    nuke_played_performance, overpass_played_performance, vertigo_played_performance
 from iteration_data_gathering.individual_deep_dive.maps.rounds_lost_in_wins import ancient_rliw_performance, \
-    dust2_rliw_performance, inferno_rliw_performance, mirage_rliw_performance, nuke_rliw_performance, \
-    overpass_rliw_performance, vertigo_rliw_performance
+    anubis_rliw_performance, dust2_rliw_performance, inferno_rliw_performance, mirage_rliw_performance, \
+    nuke_rliw_performance, overpass_rliw_performance, vertigo_rliw_performance
 from iteration_data_gathering.individual_deep_dive.maps.rounds_won_in_losses import ancient_rwil_performance, \
-    dust2_rwil_performance, inferno_rwil_performance, mirage_rwil_performance, nuke_rwil_performance, \
-    overpass_rwil_performance, vertigo_rwil_performance
+    anubis_rwil_performance, dust2_rwil_performance, inferno_rwil_performance, mirage_rwil_performance, \
+    nuke_rwil_performance, overpass_rwil_performance, vertigo_rwil_performance
 from iteration_data_gathering.individual_deep_dive.maps.win_percentage import ancient_won_performance, \
-    dust2_won_performance, inferno_won_performance, mirage_won_performance, nuke_won_performance, \
-    overpass_won_performance, vertigo_won_performance
+    anubis_won_performance, dust2_won_performance, inferno_won_performance, mirage_won_performance, \
+    nuke_won_performance, overpass_won_performance, vertigo_won_performance
 from model import mongo_client
 
 
@@ -96,6 +96,7 @@ def update_deep_dives(deep_analysis_doc, query):
 
     # maps played
     ancient_played_performance.run(deep_analysis_doc, query)
+    anubis_played_performance.run(deep_analysis_doc, query)
     dust2_played_performance.run(deep_analysis_doc, query)
     inferno_played_performance.run(deep_analysis_doc, query)
     mirage_played_performance.run(deep_analysis_doc, query)
@@ -105,6 +106,7 @@ def update_deep_dives(deep_analysis_doc, query):
 
     # maps rounds lost in wins
     ancient_rliw_performance.run(deep_analysis_doc, query)
+    anubis_rliw_performance.run(deep_analysis_doc, query)
     dust2_rliw_performance.run(deep_analysis_doc, query)
     inferno_rliw_performance.run(deep_analysis_doc, query)
     mirage_rliw_performance.run(deep_analysis_doc, query)
@@ -114,6 +116,7 @@ def update_deep_dives(deep_analysis_doc, query):
 
     # maps rounds won in losses
     ancient_rwil_performance.run(deep_analysis_doc, query)
+    anubis_rwil_performance.run(deep_analysis_doc, query)
     dust2_rwil_performance.run(deep_analysis_doc, query)
     inferno_rwil_performance.run(deep_analysis_doc, query)
     mirage_rwil_performance.run(deep_analysis_doc, query)
@@ -123,6 +126,7 @@ def update_deep_dives(deep_analysis_doc, query):
 
     # maps win percentage
     ancient_won_performance.run(deep_analysis_doc, query)
+    anubis_won_performance.run(deep_analysis_doc, query)
     dust2_won_performance.run(deep_analysis_doc, query)
     inferno_won_performance.run(deep_analysis_doc, query)
     mirage_won_performance.run(deep_analysis_doc, query)

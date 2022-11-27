@@ -1,3 +1,2 @@
-import pull_incomplete_matches.pull_predict_check_results
 import iteration_data_gathering.assess_weights_performance.all_weights
 import iteration_data_gathering.calculate_best_predictors.all_predictors

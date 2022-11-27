@@ -18,3 +18,8 @@ If you want to make the current set of weights equal to the calculated best pred
 
 This will also populate some data for deeper analysis, which can be plotted using
 any script in ```data_visualizer``` will give you a scatter plot with a regression line
+
+This is an example plot you will get when you have consumed enough data:
+![example plot](example_plot.png?raw=true "Example")
+This is using the matches_won data, plotting: given the number of matches won in the last 3 months how likely
+is the team to win their next match
